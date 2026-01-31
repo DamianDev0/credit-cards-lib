@@ -17,7 +17,7 @@ A React component library for displaying and handling credit card input with rea
 ## Installation
 
 ```bash
-npm install @your-scope/credit-card-ui
+npm install credit-card-ui-react
 ```
 
 ### Peer Dependencies
@@ -31,7 +31,7 @@ npm install react react-dom
 ### Basic Card Display
 
 ```tsx
-import { CreditCard } from "@your-scope/credit-card-ui";
+import { CreditCard } from "credit-card-ui-react";
 
 function App() {
   return (
@@ -50,7 +50,7 @@ function App() {
 ### Card with Form
 
 ```tsx
-import { CreditCardWithForm } from "@your-scope/credit-card-ui";
+import { CreditCardWithForm } from "credit-card-ui-react";
 
 function App() {
   const handleSubmit = (data) => {
@@ -69,7 +69,7 @@ function App() {
 ### Using the Hook
 
 ```tsx
-import { useCreditCard, CreditCard } from "@your-scope/credit-card-ui";
+import { useCreditCard, CreditCard } from "credit-card-ui-react";
 
 function App() {
   const {
@@ -111,7 +111,7 @@ function App() {
 The main card display component with animated gradient backgrounds.
 
 ```tsx
-import { CreditCard } from "@your-scope/credit-card-ui";
+import { CreditCard } from "credit-card-ui-react";
 ```
 
 #### Props
@@ -309,7 +309,7 @@ Disable animations:
 Complete form component with card preview and validation.
 
 ```tsx
-import { CreditCardWithForm } from "@your-scope/credit-card-ui";
+import { CreditCardWithForm } from "credit-card-ui-react";
 ```
 
 #### Props
@@ -497,7 +497,7 @@ Custom styling:
 Hook for managing credit card state and validation.
 
 ```tsx
-import { useCreditCard } from "@your-scope/credit-card-ui";
+import { useCreditCard } from "credit-card-ui-react";
 ```
 
 #### Return Value
@@ -570,7 +570,7 @@ interface CardMetadata {
 Hook used internally by CreditCardWithForm. Can be used for custom form implementations.
 
 ```tsx
-import { useCreditCardForm } from "@your-scope/credit-card-ui";
+import { useCreditCardForm } from "credit-card-ui-react";
 ```
 
 ---
@@ -592,7 +592,7 @@ import {
   isLatamCard,
   supportsInstallments,
   getMaxInstallments,
-} from "@your-scope/credit-card-ui";
+} from "credit-card-ui-react";
 ```
 
 #### detectCard
@@ -729,7 +729,7 @@ import {
   isValidExpiry,
   isValidCvv,
   getValidationErrors,
-} from "@your-scope/credit-card-ui";
+} from "credit-card-ui-react";
 ```
 
 #### validateCardNumber
@@ -842,7 +842,7 @@ import {
   getTestCardsByLevel,
   getRandomTestCard,
   findTestCard,
-} from "@your-scope/credit-card-ui";
+} from "credit-card-ui-react";
 ```
 
 ### Available Test Cards
@@ -886,7 +886,7 @@ findTestCard("platinum");
 Format card number with spaces.
 
 ```tsx
-import { formatCardNumber } from "@your-scope/credit-card-ui";
+import { formatCardNumber } from "credit-card-ui-react";
 
 formatCardNumber("4111111111111111"); // "4111 1111 1111 1111"
 ```
@@ -896,7 +896,7 @@ formatCardNumber("4111111111111111"); // "4111 1111 1111 1111"
 Format with dashes for input fields.
 
 ```tsx
-import { formatCardNumberWithDashes } from "@your-scope/credit-card-ui";
+import { formatCardNumberWithDashes } from "credit-card-ui-react";
 
 formatCardNumberWithDashes("4111111111111111"); // "4111 - 1111 - 1111 - 1111"
 ```
@@ -906,7 +906,7 @@ formatCardNumberWithDashes("4111111111111111"); // "4111 - 1111 - 1111 - 1111"
 Remove non-digit characters.
 
 ```tsx
-import { cleanCardNumber } from "@your-scope/credit-card-ui";
+import { cleanCardNumber } from "credit-card-ui-react";
 
 cleanCardNumber("4111 - 1111 - 1111 - 1111"); // "4111111111111111"
 ```
@@ -916,7 +916,7 @@ cleanCardNumber("4111 - 1111 - 1111 - 1111"); // "4111111111111111"
 Get last 4 digits.
 
 ```tsx
-import { getLastFourDigits } from "@your-scope/credit-card-ui";
+import { getLastFourDigits } from "credit-card-ui-react";
 
 getLastFourDigits("4111111111111111"); // "1111"
 ```
@@ -926,7 +926,7 @@ getLastFourDigits("4111111111111111"); // "1111"
 Utility for merging Tailwind classes.
 
 ```tsx
-import { cn } from "@your-scope/credit-card-ui";
+import { cn } from "credit-card-ui-react";
 
 cn("text-red-500", condition && "bg-blue-500");
 ```
@@ -944,7 +944,7 @@ import {
   LATAM_BRANDS,
   CARD_PLACEHOLDERS,
   CARD_LIMITS,
-} from "@your-scope/credit-card-ui";
+} from "credit-card-ui-react";
 ```
 
 ### BRAND_GRADIENTS
@@ -993,7 +993,7 @@ import type {
   UseCreditCardReturn,
   ValidationError,
   FormSubmitData,
-} from "@your-scope/credit-card-ui";
+} from "credit-card-ui-react";
 ```
 
 ---
@@ -1007,7 +1007,7 @@ The library uses Tailwind CSS. Include the library in your Tailwind content conf
 module.exports = {
   content: [
     "./src/**/*.{js,ts,jsx,tsx}",
-    "./node_modules/@your-scope/credit-card-ui/**/*.{js,ts,jsx,tsx}",
+    "./node_modules/credit-card-ui-react/**/*.{js,ts,jsx,tsx}",
   ],
 };
 ```
