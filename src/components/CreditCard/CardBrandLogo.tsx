@@ -2,14 +2,20 @@ import { AnimatePresence, motion } from "framer-motion";
 import type { CardBrandLogoProps, CardBrand } from "../../types/creditCard.types";
 import { cn } from "../../utils/cn";
 
+// Import SVGs directly so they're bundled
+import visaLogo from "../../assets/brands/visa.svg";
+import mastercardLogo from "../../assets/brands/master_card.svg";
+import discoverLogo from "../../assets/brands/discover.svg";
+import dinersLogo from "../../assets/brands/diners.svg";
+import jcbLogo from "../../assets/brands/jbc.svg";
+
 // Only brands with available logos - others will show nothing
-const BRAND_LOGO_PATHS: Partial<Record<CardBrand, string>> = {
-  visa: "/credit/visa.svg",
-  mastercard: "/credit/master_card.svg",
-  amex: "/credit/amex.svg",
-  discover: "/credit/discover.svg",
-  diners: "/credit/diners.svg",
-  jcb: "/credit/jbc.svg",
+const BRAND_LOGOS: Partial<Record<CardBrand, string>> = {
+  visa: visaLogo,
+  mastercard: mastercardLogo,
+  discover: discoverLogo,
+  diners: dinersLogo,
+  jcb: jcbLogo,
 };
 
 const SIZE_CLASSES = {
@@ -19,7 +25,7 @@ const SIZE_CLASSES = {
 };
 
 export function CardBrandLogo({ brand, className, size = "md", animation }: CardBrandLogoProps) {
-  const logoPath = BRAND_LOGO_PATHS[brand];
+  const logoSrc = BRAND_LOGOS[brand];
   const sizeClass = SIZE_CLASSES[size];
   const disableAnimations = animation?.disableAnimations ?? false;
   const duration = animation?.logoTransitionDuration ?? 0.2;
@@ -27,10 +33,10 @@ export function CardBrandLogo({ brand, className, size = "md", animation }: Card
   return (
     <div className={cn(sizeClass, "relative", className)}>
       <AnimatePresence mode="wait">
-        {logoPath && (
+        {logoSrc && (
           <motion.img
             key={brand}
-            src={logoPath}
+            src={logoSrc}
             alt={`${brand} logo`}
             className="w-full h-full object-contain absolute inset-0"
             initial={disableAnimations ? false : { opacity: 0, scale: 0.8 }}
