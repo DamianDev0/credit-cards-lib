@@ -28,7 +28,7 @@ export function CreditCardBack({
   const showLegalText = visibility?.legalText ?? true;
 
   return (
-    <div className="absolute inset-0 w-full h-full" style={{ backfaceVisibility: "hidden" }}>
+    <div className="absolute inset-0 w-full h-full rounded-2xl overflow-hidden" style={{ backfaceVisibility: "hidden" }}>
       {showLegalText && (
         <div className="absolute top-3 left-6 right-6 text-center">
           <p className="text-[7px] text-white/60 leading-relaxed">{mergedLabels.bankDisclaimer}</p>
