@@ -1,6 +1,4 @@
-import type { CardBrand } from "../../types/creditCard.types";
-
-export type GradientColors = [string, string, string, string];
+import type { CardBrand, GradientColors } from "../../types/creditCard.types";
 
 export const BRAND_GRADIENTS: Record<CardBrand, GradientColors> = {
   visa: ["#1a1f71", "#4169e1", "#00008b", "#1e3a8a"],

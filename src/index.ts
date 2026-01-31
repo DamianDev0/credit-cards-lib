@@ -7,9 +7,8 @@ export {
   BRAND_GRADIENTS,
   CSS_FALLBACKS,
 } from "./components/CreditCard";
-export type { GradientColors } from "./components/CreditCard";
 
-export { CreditCardForm } from "./components/CreditCardForm";
+export { CreditCardForm, CreditCardWithForm } from "./components/CreditCardForm";
 
 // Hooks
 export { useCreditCard } from "./hooks/useCreditCard";
@@ -42,7 +41,22 @@ export {
 export type {
   CardBrand,
   CardField,
+  CardSize,
+  GradientColors,
+  CardAnimationConfig,
+  CardGradientConfig,
+  CardVisibilityConfig,
+  CardPlaceholders,
+  CardLabels,
+  CardStyleConfig,
+  CardClassNames,
   FormVariant,
+  FormLayout,
+  FormLabels,
+  FormClassNames,
+  CustomField,
+  AddressData,
+  FormSubmitData,
   CreditCardData,
   BillingAddress,
   CreditCardValidation,
@@ -52,5 +66,6 @@ export type {
   CreditCardBackProps,
   CardBrandLogoProps,
   CreditCardFormProps,
+  CreditCardWithFormProps,
   UseCreditCardReturn,
 } from "./types/creditCard.types";

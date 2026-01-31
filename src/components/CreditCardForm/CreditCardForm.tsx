@@ -21,6 +21,21 @@ function CheckIcon({ className }: { className?: string }) {
   );
 }
 
+const DEFAULT_LABELS = {
+  cardNumber: "Card Number",
+  cardNumberHint: "Enter the 16-digit card number",
+  cardholderName: "Cardholder Name",
+  cardholderNameHint: "Enter your name as on the card",
+  expiryDate: "Expiry Date",
+  expiryDateHint: "MM/YY",
+  cvv: "CVV",
+  cvvHint: "3 or 4 digits",
+  bankName: "Bank Name",
+  bankNameHint: "Optional",
+  submit: "Add Card",
+  processing: "Processing...",
+};
+
 export function CreditCardForm({
   cardNumber,
   cardholderName,
@@ -36,10 +51,17 @@ export function CreditCardForm({
   onSubmit,
   className,
   isSubmitting = false,
-  submitLabel = "Add Card",
+  submitLabel,
+  showLabels = true,
+  showHints = true,
   bankName,
   onBankNameChange,
+  labels,
+  classNames,
 }: CreditCardFormProps) {
+  const mergedLabels = { ...DEFAULT_LABELS, ...labels };
+  const finalSubmitLabel = submitLabel ?? mergedLabels.submit;
+
   const handleSubmit = useCallback(
     (e: React.FormEvent) => {
       e.preventDefault();
@@ -87,19 +109,33 @@ export function CreditCardForm({
     onFocusChange(null);
   }, [onFocusChange]);
 
+  const inputWrapperClass = cn(
+    "flex items-center gap-2 sm:gap-3 p-2.5 sm:p-3 border border-gray-200 rounded-xl",
+    classNames?.inputWrapper
+  );
+
+  const inputClass = cn(
+    "flex-1 text-sm bg-transparent outline-none placeholder:text-gray-400",
+    classNames?.input
+  );
+
+  const labelClass = cn("text-sm font-medium", classNames?.label);
+  const hintClass = cn("text-xs text-gray-500", classNames?.hint);
+
   return (
     <form
       onSubmit={handleSubmit}
-      className={cn("w-full max-w-md mx-auto space-y-4 sm:space-y-5", className)}
+      className={cn("w-full max-w-md mx-auto space-y-4 sm:space-y-5", className, classNames?.root)}
     >
-      {/* Bank Name */}
       {onBankNameChange && (
-        <div className="space-y-1.5">
-          <label htmlFor="bankName" className="text-sm font-medium">
-            Bank Name
-          </label>
-          <p className="text-xs text-gray-500">Optional</p>
-          <div className="flex items-center gap-2 p-2.5 sm:p-3 border border-gray-200 rounded-xl">
+        <div className={cn("space-y-1.5", classNames?.field)}>
+          {showLabels && (
+            <label htmlFor="bankName" className={labelClass}>
+              {mergedLabels.bankName}
+            </label>
+          )}
+          {showHints && <p className={hintClass}>{mergedLabels.bankNameHint}</p>}
+          <div className={inputWrapperClass}>
             <input
               id="bankName"
               type="text"
@@ -107,21 +143,20 @@ export function CreditCardForm({
               onChange={(e) => onBankNameChange(e.target.value)}
               placeholder="BBVA"
               maxLength={20}
-              className="flex-1 text-sm bg-transparent outline-none placeholder:text-gray-400 uppercase"
+              className={cn(inputClass, "uppercase")}
             />
           </div>
         </div>
       )}
 
-      {/* Card Number */}
-      <div className="space-y-1.5">
-        <label htmlFor="cardNumber" className="text-sm font-medium">
-          Card Number
-        </label>
-        <p className="text-xs text-gray-500">
-          Enter the 16-digit card number
-        </p>
-        <div className="flex items-center gap-2 sm:gap-3 p-2.5 sm:p-3 border border-gray-200 rounded-xl">
+      <div className={cn("space-y-1.5", classNames?.field)}>
+        {showLabels && (
+          <label htmlFor="cardNumber" className={labelClass}>
+            {mergedLabels.cardNumber}
+          </label>
+        )}
+        {showHints && <p className={hintClass}>{mergedLabels.cardNumberHint}</p>}
+        <div className={inputWrapperClass}>
           {brand !== "unknown" && (
             <div className="w-8 h-5 sm:w-10 sm:h-6 shrink-0">
               <CardBrandLogo brand={brand} className="w-full h-full" />
@@ -137,25 +172,29 @@ export function CreditCardForm({
             placeholder="0000 - 0000 - 0000 - 0000"
             inputMode="numeric"
             autoComplete="cc-number"
-            className="flex-1 font-mono text-sm bg-transparent outline-none placeholder:text-gray-400 tracking-wider"
+            className={cn(inputClass, "font-mono tracking-wider")}
           />
           {validation.cardNumber && cardNumber.length > 0 && (
-            <div className="w-5 h-5 rounded-full bg-blue-500 flex items-center justify-center shrink-0">
+            <div
+              className={cn(
+                "w-5 h-5 rounded-full bg-blue-500 flex items-center justify-center shrink-0",
+                classNames?.validIcon
+              )}
+            >
               <CheckIcon className="w-3 h-3 text-white" />
             </div>
           )}
         </div>
       </div>
 
-      {/* Cardholder Name */}
-      <div className="space-y-1.5">
-        <label htmlFor="cardholderName" className="text-sm font-medium">
-          Cardholder Name
-        </label>
-        <p className="text-xs text-gray-500">
-          Enter your name as on the card
-        </p>
-        <div className="flex items-center gap-2 p-2.5 sm:p-3 border border-gray-200 rounded-xl">
+      <div className={cn("space-y-1.5", classNames?.field)}>
+        {showLabels && (
+          <label htmlFor="cardholderName" className={labelClass}>
+            {mergedLabels.cardholderName}
+          </label>
+        )}
+        {showHints && <p className={hintClass}>{mergedLabels.cardholderNameHint}</p>}
+        <div className={inputWrapperClass}>
           <input
             id="cardholderName"
             type="text"
@@ -166,19 +205,20 @@ export function CreditCardForm({
             placeholder="John Doe"
             maxLength={22}
             autoComplete="cc-name"
-            className="flex-1 text-sm bg-transparent outline-none placeholder:text-gray-400 uppercase"
+            className={cn(inputClass, "uppercase")}
           />
         </div>
       </div>
 
-      {/* Expiry & CVV Row */}
       <div className="flex gap-3 sm:gap-4">
-        <div className="flex-1 space-y-1.5">
-          <label htmlFor="expiryDate" className="text-sm font-medium">
-            Expiry Date
-          </label>
-          <p className="text-xs text-gray-500">MM/YY</p>
-          <div className="flex items-center gap-2 p-2.5 sm:p-3 border border-gray-200 rounded-xl">
+        <div className={cn("flex-1 space-y-1.5", classNames?.field)}>
+          {showLabels && (
+            <label htmlFor="expiryDate" className={labelClass}>
+              {mergedLabels.expiryDate}
+            </label>
+          )}
+          {showHints && <p className={hintClass}>{mergedLabels.expiryDateHint}</p>}
+          <div className={inputWrapperClass}>
             <input
               id="expiryDate"
               type="text"
@@ -190,17 +230,19 @@ export function CreditCardForm({
               maxLength={CARD_LIMITS.maxExpiryLength}
               inputMode="numeric"
               autoComplete="cc-exp"
-              className="w-full text-center font-mono text-sm bg-transparent outline-none placeholder:text-gray-400"
+              className={cn(inputClass, "w-full text-center font-mono")}
             />
           </div>
         </div>
 
-        <div className="flex-1 space-y-1.5">
-          <label htmlFor="cvv" className="text-sm font-medium">
-            CVV
-          </label>
-          <p className="text-xs text-gray-500">3 or 4 digits</p>
-          <div className="flex items-center gap-2 p-2.5 sm:p-3 border border-gray-200 rounded-xl">
+        <div className={cn("flex-1 space-y-1.5", classNames?.field)}>
+          {showLabels && (
+            <label htmlFor="cvv" className={labelClass}>
+              {mergedLabels.cvv}
+            </label>
+          )}
+          {showHints && <p className={hintClass}>{mergedLabels.cvvHint}</p>}
+          <div className={inputWrapperClass}>
             <input
               id="cvv"
               type="password"
@@ -212,13 +254,12 @@ export function CreditCardForm({
               maxLength={CARD_LIMITS.maxCvvLength}
               inputMode="numeric"
               autoComplete="cc-csc"
-              className="w-full text-center font-mono text-sm bg-transparent outline-none placeholder:text-gray-400"
+              className={cn(inputClass, "w-full text-center font-mono")}
             />
           </div>
         </div>
       </div>
 
-      {/* Submit Button */}
       <button
         type="submit"
         disabled={!validation.isValid || isSubmitting}
@@ -226,10 +267,11 @@ export function CreditCardForm({
           "w-full h-10 sm:h-12 rounded-xl font-medium text-white transition-colors",
           validation.isValid && !isSubmitting
             ? "bg-blue-500 hover:bg-blue-600 cursor-pointer"
-            : "bg-gray-300 cursor-not-allowed"
+            : "bg-gray-300 cursor-not-allowed",
+          classNames?.submitButton
         )}
       >
-        {isSubmitting ? "Processing..." : submitLabel}
+        {isSubmitting ? mergedLabels.processing : finalSubmitLabel}
       </button>
     </form>
   );
