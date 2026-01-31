@@ -32,31 +32,33 @@ export function CreditCardFront({
   const showBrandLogo = visibility?.brandLogo ?? true;
 
   return (
-    <div className="absolute inset-0 w-full h-full" style={{ backfaceVisibility: "hidden" }}>
-      {bankName && (
-        <div className="absolute top-5 left-6">
-          <p className={cn("text-base font-bold tracking-wide text-white uppercase", classNames?.bankName)}>
+    <div className="absolute inset-0 w-full h-full p-[5%]" style={{ backfaceVisibility: "hidden" }}>
+      {/* Top row: Bank name + Contactless */}
+      <div className="flex justify-between items-start">
+        {bankName ? (
+          <p className={cn("text-xs sm:text-sm md:text-base font-bold tracking-wide text-white uppercase", classNames?.bankName)}>
             {bankName}
           </p>
-        </div>
-      )}
+        ) : (
+          <div />
+        )}
+        {showContactless && (
+          <div className={cn("rotate-90", classNames?.contactless)}>
+            <ContactlessIcon className="w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10 opacity-90 text-white" />
+          </div>
+        )}
+      </div>
 
-      {showChip && (
-        <div className={cn("absolute top-24 left-6", classNames?.chip)}>
-          <ChipIcon className="w-14 h-10" />
-        </div>
-      )}
-
-      {showContactless && (
-        <div className={cn("absolute top-5 right-6 rotate-90", classNames?.contactless)}>
-          <ContactlessIcon className="w-10 h-10 opacity-90 text-white" />
-        </div>
-      )}
-
-      <div className="absolute bottom-20 left-6 right-6">
+      {/* Middle: Chip + Card number */}
+      <div className="absolute left-[5%] right-[5%] top-[35%]">
+        {showChip && (
+          <div className={cn("mb-1 sm:mb-2", classNames?.chip)}>
+            <ChipIcon className="w-9 h-6 sm:w-11 sm:h-8 md:w-14 md:h-10" />
+          </div>
+        )}
         <p
           className={cn(
-            "text-xl sm:text-xl tracking-[0.15em] text-white font-medium whitespace-nowrap",
+            "text-sm sm:text-lg md:text-xl tracking-[0.1em] sm:tracking-[0.15em] text-white font-medium",
             classNames?.cardNumber
           )}
           style={{ fontFamily: "'Roboto Mono', monospace" }}
@@ -65,25 +67,27 @@ export function CreditCardFront({
         </p>
       </div>
 
-      <div className="absolute bottom-6 left-6 flex items-center gap-6">
-        <p
-          className={cn(
-            "text-[10px] sm:text-xs font-medium tracking-wide text-white uppercase truncate max-w-35 sm:max-w-40",
-            classNames?.cardholderName
-          )}
-        >
-          {displayName}
-        </p>
-        <p className={cn("text-[10px] sm:text-xs tracking-wide text-white", classNames?.expiryDate)}>
-          {displayExpiry}
-        </p>
-      </div>
-
-      {showBrandLogo && (
-        <div className={cn("absolute bottom-4 right-6", classNames?.brandLogo)}>
-          <CardBrandLogo brand={brand} animation={animation} />
+      {/* Bottom row: Name, Expiry + Brand logo */}
+      <div className="absolute bottom-[5%] left-[5%] right-[5%] flex justify-between items-end">
+        <div className="flex items-center gap-3 sm:gap-5">
+          <p
+            className={cn(
+              "text-[8px] sm:text-[10px] md:text-xs font-medium tracking-wide text-white uppercase truncate max-w-20 sm:max-w-32 md:max-w-40",
+              classNames?.cardholderName
+            )}
+          >
+            {displayName}
+          </p>
+          <p className={cn("text-[8px] sm:text-[10px] md:text-xs tracking-wide text-white", classNames?.expiryDate)}>
+            {displayExpiry}
+          </p>
         </div>
-      )}
+        {showBrandLogo && (
+          <div className={classNames?.brandLogo}>
+            <CardBrandLogo brand={brand} size="sm" animation={animation} className="w-12 h-8 sm:w-16 sm:h-10 md:w-20 md:h-14" />
+          </div>
+        )}
+      </div>
     </div>
   );
 }

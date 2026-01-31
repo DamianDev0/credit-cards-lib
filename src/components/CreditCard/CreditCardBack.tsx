@@ -27,53 +27,61 @@ export function CreditCardBack({
   const showSignatureStrip = visibility?.signatureStrip ?? true;
   const showLegalText = visibility?.legalText ?? true;
 
+  // Text style with shadow for visibility on any background
+  const textShadow = "0 1px 2px rgba(0,0,0,0.8)";
+
   return (
-    <div className="absolute inset-0 w-full h-full rounded-2xl overflow-hidden" style={{ backfaceVisibility: "hidden" }}>
+    <div className="absolute inset-0 w-full h-full overflow-hidden" style={{ backfaceVisibility: "hidden" }}>
+      {/* Bank disclaimer - top */}
       {showLegalText && (
-        <div className="absolute top-3 left-6 right-6 text-center">
-          <p className="text-[7px] text-white/60 leading-relaxed">{mergedLabels.bankDisclaimer}</p>
+        <div className="absolute top-[3%] left-[5%] right-[5%] text-center">
+          <p className="text-[5px] sm:text-[6px] md:text-[7px] text-white leading-tight" style={{ textShadow }}>
+            {mergedLabels.bankDisclaimer}
+          </p>
         </div>
       )}
 
+      {/* Magnetic stripe */}
       {showMagneticStripe && (
-        <div className={cn("absolute top-10 left-0 right-0 h-11 bg-zinc-900", classNames?.magneticStripe)} />
+        <div className={cn("absolute top-[12%] left-0 right-0 h-[18%] bg-zinc-900", classNames?.magneticStripe)} />
       )}
 
+      {/* Signature strip with CVV */}
       {showSignatureStrip && (
-        <div className={cn("absolute top-26 left-4 right-4", classNames?.signatureStrip)}>
-          <div className="flex items-stretch h-9">
+        <div className={cn("absolute top-[38%] left-[4%] right-[4%]", classNames?.signatureStrip)}>
+          <div className="flex items-stretch h-7 sm:h-8 md:h-9">
             <div className="flex-1 bg-linear-to-b from-amber-50 to-amber-100 relative overflow-hidden rounded-l">
-              <div className="absolute inset-0 flex flex-col justify-evenly py-1">
-                {Array.from({ length: 7 }).map((_, i) => (
+              <div className="absolute inset-0 flex flex-col justify-evenly py-0.5">
+                {Array.from({ length: 5 }).map((_, i) => (
                   <div key={i} className="h-px bg-amber-300/60" />
                 ))}
               </div>
             </div>
 
-            <div className="w-14 h-9 bg-white flex items-center justify-center">
-              <p className="text-xs font-mono text-zinc-700">{lastFourDigits}</p>
+            <div className="w-10 sm:w-12 md:w-14 bg-white flex items-center justify-center shrink-0">
+              <p className="text-[10px] sm:text-xs font-mono text-zinc-700">{lastFourDigits}</p>
             </div>
 
-            <div className="w-12 h-9 bg-white flex items-center justify-center rounded-r border-l border-gray-200">
-              <p className={cn("text-xs font-mono font-bold text-zinc-900", classNames?.cvv)}>{displayCvv}</p>
+            <div className="w-8 sm:w-10 md:w-12 bg-white flex items-center justify-center rounded-r border-l border-gray-200 shrink-0">
+              <p className={cn("text-[10px] sm:text-xs font-mono font-bold text-zinc-900", classNames?.cvv)}>{displayCvv}</p>
             </div>
           </div>
         </div>
       )}
 
-      {showLegalText && (
-        <div className="absolute top-36 right-6 left-6">
-          <p className="ml-56 text-[6px] text-white/55 leading-relaxed">{mergedLabels.customerService}</p>
-        </div>
-      )}
-
-      <div className="absolute bottom-11 left-6">
-        <p className="text-[8px] text-white/25 font-mono tracking-widest">•••• •••• •••• {lastFourDigits}</p>
+      {/* Card number at bottom */}
+      <div className="absolute bottom-[18%] left-[5%]">
+        <p className="text-[6px] sm:text-[7px] md:text-[8px] text-white/70 font-mono tracking-wider" style={{ textShadow }}>
+          •••• •••• •••• {lastFourDigits}
+        </p>
       </div>
 
+      {/* Terms at very bottom */}
       {showLegalText && (
-        <div className="absolute bottom-5 left-6 right-6">
-          <p className="text-[5px] text-white/30 leading-relaxed">{mergedLabels.termsAndConditions}</p>
+        <div className="absolute bottom-[4%] left-[5%] right-[5%]">
+          <p className="text-[4px] sm:text-[5px] text-white/60 leading-tight" style={{ textShadow }}>
+            {mergedLabels.termsAndConditions}
+          </p>
         </div>
       )}
     </div>

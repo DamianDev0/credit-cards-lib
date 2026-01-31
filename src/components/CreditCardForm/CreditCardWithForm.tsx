@@ -129,8 +129,8 @@ export function CreditCardWithForm({
     ));
 
   return (
-    <div className={cn(LAYOUT_CLASSES[layout], className)} style={{ gap: gapStyle }}>
-      <div className={cn("w-full", layout !== "vertical" && "lg:flex-1 lg:min-w-[320px] lg:shrink-0", cardClassName)}>
+    <div className={cn(LAYOUT_CLASSES[layout], "w-full", className)} style={{ gap: gapStyle }}>
+      <div className={cn("w-full flex justify-center", layout !== "vertical" && "lg:flex-1 lg:min-w-[320px] lg:shrink-0", cardClassName)}>
         <CreditCard
           cardNumber={formattedCardNumber}
           cardholderName={state.cardholderName}

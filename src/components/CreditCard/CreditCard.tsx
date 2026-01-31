@@ -19,11 +19,12 @@ const GrainGradient = lazy(() =>
   import("@paper-design/shaders-react").then((mod) => ({ default: mod.GrainGradient }))
 );
 
+// Responsive size presets - scales up on larger screens
 const SIZE_PRESETS: Record<CardSize, string> = {
-  sm: "max-w-72",
-  md: "max-w-96",
-  lg: "max-w-105",
-  xl: "max-w-130",
+  sm: "max-w-64 sm:max-w-72",
+  md: "max-w-72 sm:max-w-80 md:max-w-96",
+  lg: "max-w-80 sm:max-w-96 md:max-w-[420px]",
+  xl: "max-w-96 sm:max-w-[420px] md:max-w-[480px] lg:max-w-[520px]",
 };
 
 const DEFAULT_VISIBILITY = {

@@ -4,6 +4,25 @@
 @source "../src/**/*.{ts,tsx}";
 
 /* Responsive utilities that must work in consumer projects */
+
+/* sm breakpoint (640px) */
+@media (min-width: 640px) {
+  .sm\:max-w-72 { max-width: 18rem !important; }
+  .sm\:max-w-80 { max-width: 20rem !important; }
+  .sm\:max-w-96 { max-width: 24rem !important; }
+  .sm\:max-w-\[420px\] { max-width: 420px !important; }
+  .sm\:space-y-5 > :not(:first-child) { margin-top: 1.25rem !important; }
+  .sm\:gap-4 { gap: 1rem !important; }
+}
+
+/* md breakpoint (768px) */
+@media (min-width: 768px) {
+  .md\:max-w-96 { max-width: 24rem !important; }
+  .md\:max-w-\[420px\] { max-width: 420px !important; }
+  .md\:max-w-\[480px\] { max-width: 480px !important; }
+}
+
+/* lg breakpoint (1024px) */
 @media (min-width: 1024px) {
   .lg\:flex-1 { flex: 1 1 0% !important; }
   .lg\:flex-row { flex-direction: row !important; }
@@ -11,6 +30,7 @@
   .lg\:items-start { align-items: flex-start !important; }
   .lg\:min-w-\[320px\] { min-width: 320px !important; }
   .lg\:shrink-0 { flex-shrink: 0 !important; }
+  .lg\:max-w-\[520px\] { max-width: 520px !important; }
 }
 
 /* Note: No global :root or body styles - let consumers control their own app styles */

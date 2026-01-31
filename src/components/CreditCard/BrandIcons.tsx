@@ -150,27 +150,29 @@ export function ContactlessIcon(props: IconProps) {
 }
 
 export function AmexIcon(props: IconProps) {
-  // AMEX - clean text logo
+  // AMEX - clean blue text logo
   return (
     <svg viewBox="0 0 100 32" {...props}>
-      <g fill="#016FD0">
-        {/* A */}
-        <path d="M7.2 27H3.5L10.8 5h4.8l7.3 22h-3.7l-1.6-5H8.8L7.2 27zm3-8.2h5.6L13 9.6h-.1l-2.7 9.2z" />
-        {/* M */}
-        <path d="M24 27V5h5.7l4.5 15.3h.1L38.8 5h5.7v22h-3.6V10.1h-.1L35.6 27h-3.5l-5.3-16.9h-.1V27H24z" />
-        {/* E */}
-        <path d="M48 27V5h14v3.2H51.6v5.5h10v3.1h-10v7h10.4V27H48z" />
-        {/* X */}
-        <path d="M65 27l7-11.2L65.5 5h4.3l4.7 7.7L79 5h4.2l-6.4 10.6L84 27h-4.4l-5.2-8.3-5.1 8.3H65z" />
-      </g>
+      <text
+        x="50"
+        y="24"
+        fill="#016FD0"
+        fontFamily="Arial, Helvetica, sans-serif"
+        fontSize="28"
+        fontWeight="bold"
+        textAnchor="middle"
+        letterSpacing="2"
+      >
+        AMEX
+      </text>
     </svg>
   );
 }
 
 export function MaestroIcon(props: IconProps) {
+  // Maestro - two overlapping circles without background
   return (
     <svg viewBox="0 0 152 100" {...props}>
-      <rect width="152" height="100" rx="8" fill="#000" />
       <circle cx="54" cy="50" r="30" fill="#EB001B" />
       <circle cx="98" cy="50" r="30" fill="#00A1DF" />
       <path fill="#6C6BBD" d="M76,27.5c-7.6,6-12.5,15.3-12.5,25.7s4.9,19.7,12.5,25.7c7.6-6,12.5-15.3,12.5-25.7S83.6,33.5,76,27.5z" />
@@ -179,13 +181,12 @@ export function MaestroIcon(props: IconProps) {
 }
 
 export function UnionPayIcon(props: IconProps) {
+  // UnionPay - three colored stripes without background
   return (
-    <svg viewBox="0 0 750 471" {...props}>
-      <path fill="#E21836" d="M164.805 0h141.477c18.16 0 29.654 19.053 21.164 35.105L223.907 235.5h-46.063c-16.05 0-26.2-17.375-18.16-31.243L257.88 0H164.805z" transform="translate(75 75) scale(0.8)" />
-      <path fill="#00447C" d="M306.282 0h141.477c18.16 0 29.654 19.053 21.163 35.105L365.383 235.5h-46.063c-16.05 0-26.2-17.375-18.16-31.243L399.357 0h-93.075z" transform="translate(75 75) scale(0.8)" />
-      <path fill="#007B84" d="M447.759 0h141.477c18.16 0 29.654 19.053 21.164 35.105L506.86 235.5h-46.063c-16.05 0-26.2-17.375-18.16-31.243L540.834 0h-93.075z" transform="translate(75 75) scale(0.8)" />
-      <text x="375" y="350" fill="#FFF" fontSize="72" fontFamily="Arial, sans-serif" fontWeight="bold" textAnchor="middle">银联</text>
-      <text x="375" y="420" fill="#FFF" fontSize="32" fontFamily="Arial, sans-serif" textAnchor="middle">UnionPay</text>
+    <svg viewBox="0 0 100 60" {...props}>
+      <path fill="#E21836" d="M10 5h25c3 0 5 3 3.5 6L25 50H12c-2.5 0-4-2.5-3-5L22 5H10z" />
+      <path fill="#00447C" d="M32 5h25c3 0 5 3 3.5 6L47 50H34c-2.5 0-4-2.5-3-5L44 5H32z" />
+      <path fill="#007B84" d="M54 5h25c3 0 5 3 3.5 6L69 50H56c-2.5 0-4-2.5-3-5L66 5H54z" />
     </svg>
   );
 }
