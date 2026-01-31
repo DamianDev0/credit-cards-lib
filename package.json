@@ -37,7 +37,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
-    "build:lib": "vite build --mode lib && tsc --emitDeclarationOnly --declaration --outDir dist",
+    "build:lib": "vite build --mode lib && tsc --project tsconfig.lib.json",
     "lint": "eslint .",
     "preview": "vite preview",
     "prepublishOnly": "npm run build:lib"
