@@ -2,10 +2,7 @@ import type { CreditCardFrontProps } from "../../types/creditCard.types";
 import { CARD_PLACEHOLDERS } from "../../constants/creditCard.constants";
 import { cn } from "../../utils/cn";
 import { CardBrandLogo } from "./CardBrandLogo";
-
-// Import SVGs directly so they're bundled
-import chipSvg from "../../assets/brands/chip.svg";
-import contactlessSvg from "../../assets/brands/contactless.svg";
+import { ChipIcon, ContactlessIcon } from "./BrandIcons";
 
 const DEFAULT_PLACEHOLDERS = {
   cardNumber: CARD_PLACEHOLDERS.number,
@@ -46,13 +43,13 @@ export function CreditCardFront({
 
       {showChip && (
         <div className={cn("absolute top-24 left-6", classNames?.chip)}>
-          <img src={chipSvg} alt="Card chip" className="w-14 h-10" />
+          <ChipIcon className="w-14 h-10" />
         </div>
       )}
 
       {showContactless && (
         <div className={cn("absolute top-5 right-6 rotate-90", classNames?.contactless)}>
-          <img src={contactlessSvg} alt="Contactless" className="w-10 h-10 opacity-90 invert" />
+          <ContactlessIcon className="w-10 h-10 opacity-90 text-white" />
         </div>
       )}
 
