@@ -8,6 +8,7 @@ import { cn } from "../../utils/cn";
 import { CreditCardFront } from "./CreditCardFront";
 import { CreditCardBack } from "./CreditCardBack";
 import { BRAND_GRADIENTS, CSS_FALLBACKS } from "./gradients";
+import { LEVEL_EFFECTS, getLevelOverlayStyle, getLevelGradientColors } from "./levelEffects";
 
 const MeshGradient = lazy(() =>
   import("@paper-design/shaders-react").then((mod) => ({ default: mod.MeshGradient }))
@@ -49,6 +50,7 @@ export function CreditCard({
   expiryDate,
   cvv,
   brand,
+  level = "unknown",
   isFlipped = false,
   focusedField = null,
   bankName,
@@ -78,10 +80,16 @@ export function CreditCard({
     [style]
   );
 
-  const gradientColors = gradient?.colors ?? BRAND_GRADIENTS[brand];
+  const brandColors = gradient?.colors ?? BRAND_GRADIENTS[brand];
   const cssFallback = CSS_FALLBACKS[brand];
   const gradientSpeed = gradient?.speed ?? 0.15;
   const gradientDisabled = gradient?.disabled ?? false;
+
+  // Level-based visual effects - use level colors for premium cards
+  const levelEffect = LEVEL_EFFECTS[level];
+  const gradientColors = getLevelGradientColors(brandColors, level);
+  const levelOverlayStyle = getLevelOverlayStyle(level);
+  const hasLevelEffect = levelEffect && levelEffect.opacity > 0;
 
   const gradientTransition = useMemo(
     () => ({
@@ -161,11 +169,20 @@ export function CreditCard({
 
           <div className="absolute inset-0 bg-linear-to-br from-white/10 to-transparent" />
 
+          {/* Level-based overlay effect (gold shimmer, platinum, black, etc.) */}
+          {hasLevelEffect && (
+            <div
+              className={cn("absolute inset-0", levelEffect.overlayClass)}
+              style={levelOverlayStyle}
+            />
+          )}
+
           <CreditCardFront
             cardNumber={cardNumber}
             cardholderName={cardholderName}
             expiryDate={expiryDate}
             brand={brand}
+            level={level}
             focusedField={focusedField}
             bankName={mergedVisibility.bankName ? bankName : undefined}
             visibility={mergedVisibility}
@@ -212,6 +229,14 @@ export function CreditCard({
           )}
 
           <div className="absolute inset-0 bg-linear-to-br from-white/5 to-transparent" />
+
+          {/* Level-based overlay effect for back */}
+          {hasLevelEffect && (
+            <div
+              className={cn("absolute inset-0", levelEffect.overlayClass)}
+              style={levelOverlayStyle}
+            />
+          )}
 
           <CreditCardBack
             cvv={cvv}

@@ -1,40 +1,13 @@
-import { useState, useCallback, useMemo, useEffect, type ChangeEvent } from "react";
-import type {
-  FormLayout,
-  CreditCardWithFormProps,
-  AddressData,
-  CustomField,
-  CardField,
-} from "../../types/creditCard.types";
+import type { CreditCardWithFormProps, CustomField } from "../../types/creditCard.types";
 import { cn } from "../../utils/cn";
-import { useCreditCard } from "../../hooks/useCreditCard";
 import { CreditCard } from "../CreditCard/CreditCard";
 import { CARD_LIMITS } from "../../constants/creditCard.constants";
 import { formatCardNumberWithDashes } from "../../utils/formatCardNumber";
 import { CardBrandLogo } from "../CreditCard/CardBrandLogo";
-
-const LAYOUT_CLASSES: Record<FormLayout, string> = {
-  vertical: "flex flex-col items-center",
-  "horizontal-left": "flex flex-col lg:flex-row-reverse items-center lg:items-start",
-  "horizontal-right": "flex flex-col lg:flex-row items-center lg:items-start",
-};
-
-const EMPTY_ADDRESS: AddressData = {
-  address1: "",
-  address2: "",
-  city: "",
-  state: "",
-  zip: "",
-  country: "",
-};
-
-function CheckIcon({ className }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className={className}>
-      <polyline points="20 6 9 17 4 12" />
-    </svg>
-  );
-}
+import { CheckIcon } from "../icons/CheckIcon";
+import { LAYOUT_CLASSES } from "./constants";
+import { getFormStyles } from "./styles";
+import { useCreditCardForm } from "./hooks/useCreditCardForm";
 
 export function CreditCardWithForm({
   layout = "vertical",
@@ -58,131 +31,56 @@ export function CreditCardWithForm({
   renderHeader,
   renderFooter,
 }: CreditCardWithFormProps) {
-  const { state, validation, handlers, formattedCardNumber } = useCreditCard();
-
-  const [bankName, setBankName] = useState(initialValues?.bankName ?? "");
-  const [address, setAddress] = useState<AddressData>({
-    ...EMPTY_ADDRESS,
-    ...initialValues?.address,
+  const {
+    state,
+    validation,
+    detailedValidation,
+    metadata,
+    formattedCardNumber,
+    bankName,
+    address,
+    customValues,
+    getFirstError,
+    handlers,
+  } = useCreditCardForm({
+    initialValues,
+    showBankName,
+    showAddress,
+    customFields,
+    onCardChange,
+    onSubmit,
   });
-  const [customValues, setCustomValues] = useState<Record<string, string>>(
-    initialValues?.customFields ?? {}
-  );
 
   const gapStyle = typeof gap === "number" ? `${gap}px` : gap;
-
-  const formData = useMemo(
-    () => ({
-      cardNumber: state.cardNumber,
-      cardholderName: state.cardholderName,
-      expiryDate: state.expiryDate,
-      cvv: state.cvv,
-      brand: state.brand,
-      bankName: showBankName ? bankName : undefined,
-      address: showAddress ? address : undefined,
-      customFields: customFields.length > 0 ? customValues : undefined,
-    }),
-    [state, bankName, address, customValues, showBankName, showAddress, customFields.length]
-  );
-
-  useEffect(() => {
-    onCardChange?.(formData);
-  }, [formData, onCardChange]);
-
-  const handleCardNumberInput = useCallback(
-    (e: ChangeEvent<HTMLInputElement>) => {
-      const cleaned = e.target.value.replace(/\D/g, "").slice(0, CARD_LIMITS.maxCardNumberLength);
-      handlers.setCardNumber(cleaned);
-    },
-    [handlers]
-  );
-
-  const handleExpiryInput = useCallback(
-    (e: ChangeEvent<HTMLInputElement>) => {
-      let value = e.target.value.replace(/\D/g, "");
-      if (value.length >= 2) {
-        value = `${value.slice(0, 2)}/${value.slice(2, 4)}`;
-      }
-      handlers.setExpiryDate(value);
-    },
-    [handlers]
-  );
-
-  const handleCvvInput = useCallback(
-    (e: ChangeEvent<HTMLInputElement>) => {
-      handlers.setCvv(e.target.value.replace(/\D/g, ""));
-    },
-    [handlers]
-  );
-
-  const handleFocus = useCallback(
-    (field: CardField) => () => handlers.setFocusedField(field),
-    [handlers]
-  );
-
-  const handleBlur = useCallback(() => handlers.setFocusedField(null), [handlers]);
-
-  const handleAddressChange = useCallback(
-    (field: keyof AddressData) => (e: ChangeEvent<HTMLInputElement>) => {
-      setAddress((prev) => ({ ...prev, [field]: e.target.value }));
-    },
-    []
-  );
-
-  const handleCustomFieldChange = useCallback(
-    (id: string) => (value: string) => {
-      setCustomValues((prev) => ({ ...prev, [id]: value }));
-    },
-    []
-  );
-
-  const handleSubmit = useCallback(
-    async (e: React.FormEvent) => {
-      e.preventDefault();
-      if (validation.isValid && onSubmit) {
-        await onSubmit(formData);
-      }
-    },
-    [validation.isValid, onSubmit, formData]
-  );
-
-  const inputWrapperClass = cn(
-    "flex items-center gap-2 sm:gap-3 p-2.5 sm:p-3 border border-gray-200 rounded-xl",
-    formProps?.classNames?.inputWrapper
-  );
-
-  const inputClass = cn(
-    "flex-1 text-sm bg-transparent outline-none placeholder:text-gray-400",
-    formProps?.classNames?.input
-  );
-
-  const labelClass = cn("text-sm font-medium", formProps?.classNames?.label);
-  const hintClass = cn("text-xs text-gray-500", formProps?.classNames?.hint);
-  const fieldClass = cn("space-y-1.5", formProps?.classNames?.field);
+  const styles = getFormStyles(formProps);
 
   const renderCustomFields = (fields: CustomField[]) =>
     fields.map((field) => (
-      <div key={field.id} className={cn(fieldClass, field.className)}>
-        {field.label && <label htmlFor={field.id} className={labelClass}>{field.label}</label>}
-        {field.hint && <p className={hintClass}>{field.hint}</p>}
+      <div key={field.id} className={cn(styles.field, field.className)}>
+        {field.label && (
+          <label htmlFor={field.id} className={styles.label}>
+            {field.label}
+          </label>
+        )}
+        {field.hint && <p className={styles.hint}>{field.hint}</p>}
         {field.render ? (
           field.render({
             value: customValues[field.id] ?? "",
-            onChange: handleCustomFieldChange(field.id),
+            onChange: handlers.handleCustomFieldChange(field.id),
             onFocus: () => {},
             onBlur: () => {},
           })
         ) : (
-          <div className={inputWrapperClass}>
+          <div className={styles.inputWrapper}>
             <input
               id={field.id}
               type={field.type ?? "text"}
               value={customValues[field.id] ?? ""}
-              onChange={(e) => handleCustomFieldChange(field.id)(e.target.value)}
+              onChange={(e) => handlers.handleCustomFieldChange(field.id)(e.target.value)}
               placeholder={field.placeholder}
               maxLength={field.maxLength}
               required={field.required}
-              className={inputClass}
+              className={styles.input}
             />
           </div>
         )}
@@ -191,6 +89,7 @@ export function CreditCardWithForm({
 
   return (
     <div className={cn(LAYOUT_CLASSES[layout], className)} style={{ gap: gapStyle }}>
+      {/* Card Preview */}
       <div className={cn("w-full", layout !== "vertical" && "lg:flex-1", cardClassName)}>
         <CreditCard
           cardNumber={formattedCardNumber}
@@ -198,6 +97,7 @@ export function CreditCardWithForm({
           expiryDate={state.expiryDate}
           cvv={state.cvv}
           brand={state.brand}
+          level={metadata.level}
           isFlipped={state.isFlipped}
           focusedField={state.focusedField}
           bankName={showBankName ? bankName : undefined}
@@ -206,23 +106,30 @@ export function CreditCardWithForm({
         />
       </div>
 
+      {/* Form */}
       <div className={cn("w-full", layout !== "vertical" && "lg:flex-1", formClassName)}>
-        <form onSubmit={handleSubmit} className={cn("w-full max-w-md mx-auto space-y-4 sm:space-y-5", formProps?.className)}>
+        <form
+          onSubmit={handlers.handleSubmit}
+          className={cn("w-full max-w-md mx-auto space-y-4 sm:space-y-5", formProps?.className)}
+        >
           {renderHeader?.()}
 
+          {/* Bank Name Field */}
           {showBankName && (
-            <div className={fieldClass}>
-              <label htmlFor="bankName" className={labelClass}>Bank Name</label>
-              <p className={hintClass}>Optional</p>
-              <div className={inputWrapperClass}>
+            <div className={styles.field}>
+              <label htmlFor="bankName" className={styles.label}>
+                Bank Name
+              </label>
+              <p className={styles.hint}>Optional</p>
+              <div className={styles.inputWrapper}>
                 <input
                   id="bankName"
                   type="text"
                   value={bankName}
-                  onChange={(e) => setBankName(e.target.value.toUpperCase())}
+                  onChange={handlers.handleBankNameChange}
                   placeholder="BANK NAME"
                   maxLength={20}
-                  className={cn(inputClass, "uppercase")}
+                  className={cn(styles.input, "uppercase")}
                 />
               </div>
             </div>
@@ -230,9 +137,12 @@ export function CreditCardWithForm({
 
           {customFieldsPosition === "before" && renderCustomFields(customFields)}
 
-          <div className={fieldClass}>
-            <label htmlFor="cardNumber" className={labelClass}>Card Number</label>
-            <div className={inputWrapperClass}>
+          {/* Card Number Field */}
+          <div className={styles.field}>
+            <label htmlFor="cardNumber" className={styles.label}>
+              Card Number
+            </label>
+            <div className={styles.inputWrapper}>
               {state.brand !== "unknown" && (
                 <div className="w-8 h-5 sm:w-10 sm:h-6 shrink-0">
                   <CardBrandLogo brand={state.brand} className="w-full h-full" />
@@ -242,13 +152,13 @@ export function CreditCardWithForm({
                 id="cardNumber"
                 type="text"
                 value={formatCardNumberWithDashes(state.cardNumber)}
-                onChange={handleCardNumberInput}
-                onFocus={handleFocus("cardNumber")}
-                onBlur={handleBlur}
+                onChange={handlers.handleCardNumberInput}
+                onFocus={handlers.handleFocus("cardNumber")}
+                onBlur={handlers.handleBlur}
                 placeholder="0000 - 0000 - 0000 - 0000"
                 inputMode="numeric"
                 autoComplete="cc-number"
-                className={cn(inputClass, "font-mono tracking-wider")}
+                className={cn(styles.input, "font-mono tracking-wider")}
               />
               {validation.cardNumber && state.cardNumber.length > 0 && (
                 <div className="w-5 h-5 rounded-full bg-blue-500 flex items-center justify-center shrink-0">
@@ -256,147 +166,186 @@ export function CreditCardWithForm({
                 </div>
               )}
             </div>
+            {state.cardNumber.length > 0 && getFirstError("cardNumber") && (
+              <p className="text-xs text-red-500 mt-1">
+                {getFirstError("cardNumber")?.hint || getFirstError("cardNumber")?.message}
+              </p>
+            )}
+            {metadata.type !== "unknown" && state.cardNumber.length >= 6 && (
+              <p className="text-xs text-gray-500 mt-1">
+                {metadata.type.charAt(0).toUpperCase() + metadata.type.slice(1)} card
+                {metadata.level !== "unknown" &&
+                  ` • ${metadata.level.charAt(0).toUpperCase() + metadata.level.slice(1)}`}
+                {metadata.supportsInstallments &&
+                  ` • Supports installments${metadata.maxInstallments ? ` (up to ${metadata.maxInstallments})` : ""}`}
+              </p>
+            )}
           </div>
 
-          <div className={fieldClass}>
-            <label htmlFor="cardholderName" className={labelClass}>Cardholder Name</label>
-            <div className={inputWrapperClass}>
+          {/* Cardholder Name Field */}
+          <div className={styles.field}>
+            <label htmlFor="cardholderName" className={styles.label}>
+              Cardholder Name
+            </label>
+            <div className={styles.inputWrapper}>
               <input
                 id="cardholderName"
                 type="text"
                 value={state.cardholderName}
-                onChange={(e) => handlers.setCardholderName(e.target.value.slice(0, 22))}
-                onFocus={handleFocus("cardholderName")}
-                onBlur={handleBlur}
+                onChange={handlers.handleCardholderNameInput}
+                onFocus={handlers.handleFocus("cardholderName")}
+                onBlur={handlers.handleBlur}
                 placeholder="JOHN DOE"
                 maxLength={22}
                 autoComplete="cc-name"
-                className={cn(inputClass, "uppercase")}
+                className={cn(styles.input, "uppercase")}
               />
             </div>
           </div>
 
+          {/* Expiry and CVV Fields */}
           <div className="flex gap-3 sm:gap-4">
-            <div className={cn(fieldClass, "flex-1")}>
-              <label htmlFor="expiryDate" className={labelClass}>Expiry</label>
-              <div className={inputWrapperClass}>
+            <div className={cn(styles.field, "flex-1")}>
+              <label htmlFor="expiryDate" className={styles.label}>
+                Expiry
+              </label>
+              <div className={styles.inputWrapper}>
                 <input
                   id="expiryDate"
                   type="text"
                   value={state.expiryDate}
-                  onChange={handleExpiryInput}
-                  onFocus={handleFocus("expiryDate")}
-                  onBlur={handleBlur}
+                  onChange={handlers.handleExpiryInput}
+                  onFocus={handlers.handleFocus("expiryDate")}
+                  onBlur={handlers.handleBlur}
                   placeholder="MM/YY"
                   maxLength={CARD_LIMITS.maxExpiryLength}
                   inputMode="numeric"
                   autoComplete="cc-exp"
-                  className={cn(inputClass, "text-center font-mono")}
+                  className={cn(styles.input, "text-center font-mono")}
                 />
               </div>
+              {state.expiryDate.length > 0 && getFirstError("expiryDate") && (
+                <p className="text-xs text-red-500 mt-1">
+                  {getFirstError("expiryDate")?.hint || getFirstError("expiryDate")?.message}
+                </p>
+              )}
+              {detailedValidation.expiryDate.expiresThisMonth &&
+                !detailedValidation.expiryDate.isExpired && (
+                  <p className="text-xs text-amber-500 mt-1">Expires this month</p>
+                )}
             </div>
 
-            <div className={cn(fieldClass, "flex-1")}>
-              <label htmlFor="cvv" className={labelClass}>CVV</label>
-              <div className={inputWrapperClass}>
+            <div className={cn(styles.field, "flex-1")}>
+              <label htmlFor="cvv" className={styles.label}>
+                CVV
+              </label>
+              <div className={styles.inputWrapper}>
                 <input
                   id="cvv"
                   type="password"
                   value={state.cvv}
-                  onChange={handleCvvInput}
-                  onFocus={handleFocus("cvv")}
-                  onBlur={handleBlur}
+                  onChange={handlers.handleCvvInput}
+                  onFocus={handlers.handleFocus("cvv")}
+                  onBlur={handlers.handleBlur}
                   placeholder="•••"
                   maxLength={CARD_LIMITS.maxCvvLength}
                   inputMode="numeric"
                   autoComplete="cc-csc"
-                  className={cn(inputClass, "text-center font-mono")}
+                  className={cn(styles.input, "text-center font-mono")}
                 />
               </div>
+              {state.cvv.length > 0 && getFirstError("cvv") && (
+                <p className="text-xs text-red-500 mt-1">
+                  {getFirstError("cvv")?.hint || getFirstError("cvv")?.message}
+                </p>
+              )}
             </div>
           </div>
 
+          {/* Address Fields */}
           {showAddress && (
             <>
-              <div className={fieldClass}>
-                <label htmlFor="address1" className={labelClass}>Address</label>
-                <div className={inputWrapperClass}>
+              <div className={styles.field}>
+                <label htmlFor="address1" className={styles.label}>
+                  Address
+                </label>
+                <div className={styles.inputWrapper}>
                   <input
                     id="address1"
                     type="text"
                     value={address.address1}
-                    onChange={handleAddressChange("address1")}
+                    onChange={handlers.handleAddressChange("address1")}
                     placeholder="Street address"
-                    className={inputClass}
+                    className={styles.input}
                   />
                 </div>
               </div>
 
-              <div className={fieldClass}>
-                <div className={inputWrapperClass}>
+              <div className={styles.field}>
+                <div className={styles.inputWrapper}>
                   <input
                     id="address2"
                     type="text"
                     value={address.address2}
-                    onChange={handleAddressChange("address2")}
+                    onChange={handlers.handleAddressChange("address2")}
                     placeholder="Apt, suite, etc. (optional)"
-                    className={inputClass}
+                    className={styles.input}
                   />
                 </div>
               </div>
 
               <div className="flex gap-3 sm:gap-4">
-                <div className={cn(fieldClass, "flex-1")}>
-                  <div className={inputWrapperClass}>
+                <div className={cn(styles.field, "flex-1")}>
+                  <div className={styles.inputWrapper}>
                     <input
                       id="city"
                       type="text"
                       value={address.city}
-                      onChange={handleAddressChange("city")}
+                      onChange={handlers.handleAddressChange("city")}
                       placeholder="City"
-                      className={inputClass}
+                      className={styles.input}
                     />
                   </div>
                 </div>
 
-                <div className={cn(fieldClass, "flex-1")}>
-                  <div className={inputWrapperClass}>
+                <div className={cn(styles.field, "flex-1")}>
+                  <div className={styles.inputWrapper}>
                     <input
                       id="state"
                       type="text"
                       value={address.state}
-                      onChange={handleAddressChange("state")}
+                      onChange={handlers.handleAddressChange("state")}
                       placeholder="State"
-                      className={inputClass}
+                      className={styles.input}
                     />
                   </div>
                 </div>
               </div>
 
               <div className="flex gap-3 sm:gap-4">
-                <div className={cn(fieldClass, "flex-1")}>
-                  <div className={inputWrapperClass}>
+                <div className={cn(styles.field, "flex-1")}>
+                  <div className={styles.inputWrapper}>
                     <input
                       id="zip"
                       type="text"
                       value={address.zip}
-                      onChange={handleAddressChange("zip")}
+                      onChange={handlers.handleAddressChange("zip")}
                       placeholder="ZIP Code"
                       inputMode="numeric"
-                      className={inputClass}
+                      className={styles.input}
                     />
                   </div>
                 </div>
 
-                <div className={cn(fieldClass, "flex-1")}>
-                  <div className={inputWrapperClass}>
+                <div className={cn(styles.field, "flex-1")}>
+                  <div className={styles.inputWrapper}>
                     <input
                       id="country"
                       type="text"
                       value={address.country}
-                      onChange={handleAddressChange("country")}
+                      onChange={handlers.handleAddressChange("country")}
                       placeholder="Country"
-                      className={inputClass}
+                      className={styles.input}
                     />
                   </div>
                 </div>
@@ -408,16 +357,11 @@ export function CreditCardWithForm({
 
           {children}
 
+
           <button
             type="submit"
             disabled={!validation.isValid || isSubmitting}
-            className={cn(
-              "w-full h-10 sm:h-12 rounded-xl font-medium text-white transition-colors",
-              validation.isValid && !isSubmitting
-                ? "bg-blue-500 hover:bg-blue-600 cursor-pointer"
-                : "bg-gray-300 cursor-not-allowed",
-              formProps?.classNames?.submitButton
-            )}
+            className={styles.submitButton(validation.isValid, isSubmitting)}
           >
             {isSubmitting ? "Processing..." : submitLabel}
           </button>

@@ -1,11 +1,30 @@
-export type CardBrand =
-  | "visa"
-  | "mastercard"
-  | "amex"
-  | "discover"
-  | "diners"
-  | "jcb"
-  | "unknown";
+// Re-export core types
+export type {
+  CardBrand,
+  CardType,
+  CardLevel,
+  CardRegion,
+  CardMetadata,
+  CardFormat,
+  CardDetectionResult,
+  ValidationError,
+  ValidationErrorCode,
+  CardValidationResult,
+  ExpiryValidationResult,
+  CvvValidationResult,
+  FullCardValidation,
+  DetectOptions,
+  ValidateOptions,
+} from "../core/types";
+
+export {
+  BRAND_NAMES,
+  LATAM_BRANDS,
+  REGIONAL_BRANDS,
+  INSTALLMENT_SUPPORT,
+} from "../core/types";
+
+import type { CardBrand, CardLevel, CardMetadata } from "../core/types";
 
 export type CardField = "cardNumber" | "cardholderName" | "expiryDate" | "cvv";
 
@@ -107,6 +126,7 @@ export interface CreditCardProps {
   expiryDate: string;
   cvv: string;
   brand: CardBrand;
+  level?: CardLevel;
   isFlipped?: boolean;
   focusedField?: CardField | null;
   bankName?: string;
@@ -128,6 +148,7 @@ export interface CreditCardFrontProps {
   cardholderName: string;
   expiryDate: string;
   brand: CardBrand;
+  level?: CardLevel;
   focusedField?: CardField | null;
   bankName?: string;
   visibility?: CardVisibilityConfig;
@@ -152,24 +173,7 @@ export interface CardBrandLogoProps {
   animation?: CardAnimationConfig;
 }
 
-export type FormVariant = "default" | "minimal" | "compact";
-
 export type FormLayout = "vertical" | "horizontal-left" | "horizontal-right";
-
-export interface FormLabels {
-  cardNumber?: string;
-  cardNumberHint?: string;
-  cardholderName?: string;
-  cardholderNameHint?: string;
-  expiryDate?: string;
-  expiryDateHint?: string;
-  cvv?: string;
-  cvvHint?: string;
-  bankName?: string;
-  bankNameHint?: string;
-  submit?: string;
-  processing?: string;
-}
 
 export interface FormClassNames {
   root?: string;
@@ -182,29 +186,8 @@ export interface FormClassNames {
   validIcon?: string;
 }
 
-export interface CreditCardFormProps {
-  cardNumber: string;
-  cardholderName: string;
-  expiryDate: string;
-  cvv: string;
-  brand: CardBrand;
-  validation: CreditCardValidation;
-  onCardNumberChange: (value: string) => void;
-  onCardholderNameChange: (value: string) => void;
-  onExpiryDateChange: (value: string) => void;
-  onCvvChange: (value: string) => void;
-  onFocusChange: (field: CardField | null) => void;
-  onSubmit?: () => void;
+export interface FormStyleProps {
   className?: string;
-  isSubmitting?: boolean;
-  submitLabel?: string;
-  variant?: FormVariant;
-  showLabels?: boolean;
-  showHints?: boolean;
-  showValidation?: boolean;
-  bankName?: string;
-  onBankNameChange?: (value: string) => void;
-  labels?: FormLabels;
   classNames?: FormClassNames;
 }
 
@@ -243,6 +226,7 @@ export interface FormSubmitData {
   bankName?: string;
   address?: AddressData;
   customFields?: Record<string, string>;
+  metadata?: CardMetadata;
 }
 
 export interface CreditCardWithFormProps {
@@ -262,16 +246,38 @@ export interface CreditCardWithFormProps {
   formClassName?: string;
   cardSize?: CardSize;
   cardProps?: Partial<CreditCardProps>;
-  formProps?: Partial<Omit<CreditCardFormProps, "onSubmit">>;
+  formProps?: FormStyleProps;
   children?: React.ReactNode;
   renderHeader?: () => React.ReactNode;
   renderFooter?: () => React.ReactNode;
 }
 
-// Hook return type
+export interface DetailedValidation {
+  cardNumber: {
+    isValid: boolean;
+    errors: Array<{ code: string; message: string; hint?: string }>;
+  };
+  expiryDate: {
+    isValid: boolean;
+    errors: Array<{ code: string; message: string; hint?: string }>;
+    isExpired: boolean;
+    expiresThisMonth: boolean;
+  };
+  cvv: {
+    isValid: boolean;
+    errors: Array<{ code: string; message: string; hint?: string }>;
+  };
+  cardholderName: {
+    isValid: boolean;
+    errors: Array<{ code: string; message: string; hint?: string }>;
+  };
+}
+
 export interface UseCreditCardReturn {
   state: CreditCardState;
   validation: CreditCardValidation;
+  detailedValidation: DetailedValidation;
+  metadata: CardMetadata;
   handlers: {
     setCardNumber: (value: string) => void;
     setCardholderName: (value: string) => void;
@@ -281,4 +287,7 @@ export interface UseCreditCardReturn {
     reset: () => void;
   };
   formattedCardNumber: string;
+  maskedCardNumber: string;
+  isComplete: boolean;
+  possibleBrands: CardBrand[];
 }

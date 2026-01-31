@@ -2,14 +2,14 @@ import { AnimatePresence, motion } from "framer-motion";
 import type { CardBrandLogoProps, CardBrand } from "../../types/creditCard.types";
 import { cn } from "../../utils/cn";
 
-const BRAND_LOGO_PATHS: Record<CardBrand, string> = {
+// Only brands with available logos - others will show nothing
+const BRAND_LOGO_PATHS: Partial<Record<CardBrand, string>> = {
   visa: "/credit/visa.svg",
   mastercard: "/credit/master_card.svg",
   amex: "/credit/amex.svg",
   discover: "/credit/discover.svg",
   diners: "/credit/diners.svg",
   jcb: "/credit/jbc.svg",
-  unknown: "",
 };
 
 const SIZE_CLASSES = {
