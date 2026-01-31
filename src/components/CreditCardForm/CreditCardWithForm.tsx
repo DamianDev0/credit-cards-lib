@@ -9,6 +9,34 @@ import { LAYOUT_CLASSES } from "./constants";
 import { getFormStyles } from "./styles";
 import { useCreditCardForm } from "./hooks/useCreditCardForm";
 
+const DEFAULT_INPUT_LABELS = {
+  cardNumber: "Card Number",
+  cardholderName: "Cardholder Name",
+  expiryDate: "Expiry",
+  cvv: "CVV",
+  bankName: "Bank Name",
+  address: "Address",
+  address2: "Apt, suite, etc. (optional)",
+  city: "City",
+  state: "State",
+  zip: "ZIP Code",
+  country: "Country",
+};
+
+const DEFAULT_INPUT_PLACEHOLDERS = {
+  cardNumber: "0000 - 0000 - 0000 - 0000",
+  cardholderName: "JOHN DOE",
+  expiryDate: "MM/YY",
+  cvv: "•••",
+  bankName: "BANK NAME",
+  address: "Street address",
+  address2: "Apt, suite, etc. (optional)",
+  city: "City",
+  state: "State",
+  zip: "ZIP Code",
+  country: "Country",
+};
+
 export function CreditCardWithForm({
   layout = "vertical",
   gap = "2rem",
@@ -18,6 +46,7 @@ export function CreditCardWithForm({
   submitLabel = "Submit",
   showBankName = false,
   showAddress = false,
+  showSubmitButton = true,
   customFields = [],
   customFieldsPosition = "after",
   initialValues,
@@ -25,6 +54,16 @@ export function CreditCardWithForm({
   cardClassName,
   formClassName,
   cardSize = "lg",
+  cardWidth,
+  cardAnimation,
+  cardGradient,
+  cardVisibility,
+  cardPlaceholders,
+  cardLabels,
+  cardStyle,
+  cardClassNames,
+  formInputLabels,
+  formInputPlaceholders,
   cardProps,
   formProps,
   children,
@@ -51,6 +90,8 @@ export function CreditCardWithForm({
     onSubmit,
   });
 
+  const labels = { ...DEFAULT_INPUT_LABELS, ...formInputLabels };
+  const placeholders = { ...DEFAULT_INPUT_PLACEHOLDERS, ...formInputPlaceholders };
   const gapStyle = typeof gap === "number" ? `${gap}px` : gap;
   const styles = getFormStyles(formProps);
 
@@ -89,7 +130,6 @@ export function CreditCardWithForm({
 
   return (
     <div className={cn(LAYOUT_CLASSES[layout], className)} style={{ gap: gapStyle }}>
-      {/* Card Preview */}
       <div className={cn("w-full", layout !== "vertical" && "lg:flex-1", cardClassName)}>
         <CreditCard
           cardNumber={formattedCardNumber}
@@ -102,11 +142,18 @@ export function CreditCardWithForm({
           focusedField={state.focusedField}
           bankName={showBankName ? bankName : undefined}
           size={cardSize}
+          width={cardWidth}
+          animation={cardAnimation}
+          gradient={cardGradient}
+          visibility={cardVisibility}
+          placeholders={cardPlaceholders}
+          labels={cardLabels}
+          style={cardStyle}
+          classNames={cardClassNames}
           {...cardProps}
         />
       </div>
 
-      {/* Form */}
       <div className={cn("w-full", layout !== "vertical" && "lg:flex-1", formClassName)}>
         <form
           onSubmit={handlers.handleSubmit}
@@ -114,11 +161,10 @@ export function CreditCardWithForm({
         >
           {renderHeader?.()}
 
-          {/* Bank Name Field */}
           {showBankName && (
             <div className={styles.field}>
               <label htmlFor="bankName" className={styles.label}>
-                Bank Name
+                {labels.bankName}
               </label>
               <p className={styles.hint}>Optional</p>
               <div className={styles.inputWrapper}>
@@ -127,7 +173,7 @@ export function CreditCardWithForm({
                   type="text"
                   value={bankName}
                   onChange={handlers.handleBankNameChange}
-                  placeholder="BANK NAME"
+                  placeholder={placeholders.bankName}
                   maxLength={20}
                   className={cn(styles.input, "uppercase")}
                 />
@@ -137,10 +183,9 @@ export function CreditCardWithForm({
 
           {customFieldsPosition === "before" && renderCustomFields(customFields)}
 
-          {/* Card Number Field */}
           <div className={styles.field}>
             <label htmlFor="cardNumber" className={styles.label}>
-              Card Number
+              {labels.cardNumber}
             </label>
             <div className={styles.inputWrapper}>
               {state.brand !== "unknown" && (
@@ -155,7 +200,7 @@ export function CreditCardWithForm({
                 onChange={handlers.handleCardNumberInput}
                 onFocus={handlers.handleFocus("cardNumber")}
                 onBlur={handlers.handleBlur}
-                placeholder="0000 - 0000 - 0000 - 0000"
+                placeholder={placeholders.cardNumber}
                 inputMode="numeric"
                 autoComplete="cc-number"
                 className={cn(styles.input, "font-mono tracking-wider")}
@@ -182,10 +227,9 @@ export function CreditCardWithForm({
             )}
           </div>
 
-          {/* Cardholder Name Field */}
           <div className={styles.field}>
             <label htmlFor="cardholderName" className={styles.label}>
-              Cardholder Name
+              {labels.cardholderName}
             </label>
             <div className={styles.inputWrapper}>
               <input
@@ -195,7 +239,7 @@ export function CreditCardWithForm({
                 onChange={handlers.handleCardholderNameInput}
                 onFocus={handlers.handleFocus("cardholderName")}
                 onBlur={handlers.handleBlur}
-                placeholder="JOHN DOE"
+                placeholder={placeholders.cardholderName}
                 maxLength={22}
                 autoComplete="cc-name"
                 className={cn(styles.input, "uppercase")}
@@ -203,11 +247,10 @@ export function CreditCardWithForm({
             </div>
           </div>
 
-          {/* Expiry and CVV Fields */}
           <div className="flex gap-3 sm:gap-4">
             <div className={cn(styles.field, "flex-1")}>
               <label htmlFor="expiryDate" className={styles.label}>
-                Expiry
+                {labels.expiryDate}
               </label>
               <div className={styles.inputWrapper}>
                 <input
@@ -217,7 +260,7 @@ export function CreditCardWithForm({
                   onChange={handlers.handleExpiryInput}
                   onFocus={handlers.handleFocus("expiryDate")}
                   onBlur={handlers.handleBlur}
-                  placeholder="MM/YY"
+                  placeholder={placeholders.expiryDate}
                   maxLength={CARD_LIMITS.maxExpiryLength}
                   inputMode="numeric"
                   autoComplete="cc-exp"
@@ -237,7 +280,7 @@ export function CreditCardWithForm({
 
             <div className={cn(styles.field, "flex-1")}>
               <label htmlFor="cvv" className={styles.label}>
-                CVV
+                {labels.cvv}
               </label>
               <div className={styles.inputWrapper}>
                 <input
@@ -247,7 +290,7 @@ export function CreditCardWithForm({
                   onChange={handlers.handleCvvInput}
                   onFocus={handlers.handleFocus("cvv")}
                   onBlur={handlers.handleBlur}
-                  placeholder="•••"
+                  placeholder={placeholders.cvv}
                   maxLength={CARD_LIMITS.maxCvvLength}
                   inputMode="numeric"
                   autoComplete="cc-csc"
@@ -262,12 +305,11 @@ export function CreditCardWithForm({
             </div>
           </div>
 
-          {/* Address Fields */}
           {showAddress && (
             <>
               <div className={styles.field}>
                 <label htmlFor="address1" className={styles.label}>
-                  Address
+                  {labels.address}
                 </label>
                 <div className={styles.inputWrapper}>
                   <input
@@ -275,7 +317,7 @@ export function CreditCardWithForm({
                     type="text"
                     value={address.address1}
                     onChange={handlers.handleAddressChange("address1")}
-                    placeholder="Street address"
+                    placeholder={placeholders.address}
                     className={styles.input}
                   />
                 </div>
@@ -288,7 +330,7 @@ export function CreditCardWithForm({
                     type="text"
                     value={address.address2}
                     onChange={handlers.handleAddressChange("address2")}
-                    placeholder="Apt, suite, etc. (optional)"
+                    placeholder={placeholders.address2}
                     className={styles.input}
                   />
                 </div>
@@ -302,7 +344,7 @@ export function CreditCardWithForm({
                       type="text"
                       value={address.city}
                       onChange={handlers.handleAddressChange("city")}
-                      placeholder="City"
+                      placeholder={placeholders.city}
                       className={styles.input}
                     />
                   </div>
@@ -315,7 +357,7 @@ export function CreditCardWithForm({
                       type="text"
                       value={address.state}
                       onChange={handlers.handleAddressChange("state")}
-                      placeholder="State"
+                      placeholder={placeholders.state}
                       className={styles.input}
                     />
                   </div>
@@ -330,7 +372,7 @@ export function CreditCardWithForm({
                       type="text"
                       value={address.zip}
                       onChange={handlers.handleAddressChange("zip")}
-                      placeholder="ZIP Code"
+                      placeholder={placeholders.zip}
                       inputMode="numeric"
                       className={styles.input}
                     />
@@ -344,7 +386,7 @@ export function CreditCardWithForm({
                       type="text"
                       value={address.country}
                       onChange={handlers.handleAddressChange("country")}
-                      placeholder="Country"
+                      placeholder={placeholders.country}
                       className={styles.input}
                     />
                   </div>
@@ -357,14 +399,15 @@ export function CreditCardWithForm({
 
           {children}
 
-
-          <button
-            type="submit"
-            disabled={!validation.isValid || isSubmitting}
-            className={styles.submitButton(validation.isValid, isSubmitting)}
-          >
-            {isSubmitting ? "Processing..." : submitLabel}
-          </button>
+          {showSubmitButton && (
+            <button
+              type="submit"
+              disabled={!validation.isValid || isSubmitting}
+              className={styles.submitButton(validation.isValid, isSubmitting)}
+            >
+              {isSubmitting ? "Processing..." : submitLabel}
+            </button>
+          )}
 
           {renderFooter?.()}
         </form>

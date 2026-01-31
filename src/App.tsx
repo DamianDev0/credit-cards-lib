@@ -45,6 +45,18 @@ function App() {
           //   },
           // ]}
           // customFieldsPosition="after"
+
+  //         cardProps={{
+  //   gradient: {
+  //     type: "grain",
+  //     // colors: ["#7300ff", "#eba8ff", "#00bfff", "#2b00ff"],
+  //     // colorBack: "#000000",
+  //     softness: 0.5,
+  //     intensity: 0.5,
+  //     noise: 0.25,
+  //   }
+  // }}
+
         />
       </div>
     </div>

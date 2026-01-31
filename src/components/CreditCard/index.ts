@@ -2,6 +2,7 @@ export { CreditCard } from "./CreditCard";
 export { CreditCardFront } from "./CreditCardFront";
 export { CreditCardBack } from "./CreditCardBack";
 export { CardBrandLogo } from "./CardBrandLogo";
+export { NoiseOverlay } from "./NoiseOverlay";
 export { BRAND_GRADIENTS, CSS_FALLBACKS } from "./gradients";
 export { LEVEL_EFFECTS, getLevelBadge, getLevelOverlayStyle } from "./levelEffects";
 export type { LevelEffect } from "./levelEffects";

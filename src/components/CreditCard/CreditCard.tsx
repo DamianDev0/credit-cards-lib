@@ -7,11 +7,16 @@ import type { CreditCardProps, CardSize } from "../../types/creditCard.types";
 import { cn } from "../../utils/cn";
 import { CreditCardFront } from "./CreditCardFront";
 import { CreditCardBack } from "./CreditCardBack";
+import { NoiseOverlay } from "./NoiseOverlay";
 import { BRAND_GRADIENTS, CSS_FALLBACKS } from "./gradients";
 import { LEVEL_EFFECTS, getLevelOverlayStyle, getLevelGradientColors } from "./levelEffects";
 
 const MeshGradient = lazy(() =>
   import("@paper-design/shaders-react").then((mod) => ({ default: mod.MeshGradient }))
+);
+
+const GrainGradient = lazy(() =>
+  import("@paper-design/shaders-react").then((mod) => ({ default: mod.GrainGradient }))
 );
 
 const SIZE_PRESETS: Record<CardSize, string> = {
@@ -82,10 +87,16 @@ export function CreditCard({
 
   const brandColors = gradient?.colors ?? BRAND_GRADIENTS[brand];
   const cssFallback = CSS_FALLBACKS[brand];
-  const gradientSpeed = gradient?.speed ?? 0.15;
+  const gradientType = gradient?.type ?? "mesh";
+  const gradientSpeed = gradient?.speed ?? (gradientType === "grain" ? 1 : 0.15);
   const gradientDisabled = gradient?.disabled ?? false;
 
-  // Level-based visual effects - use level colors for premium cards
+  const grainColorBack = gradient?.colorBack ?? "#000000";
+  const grainSoftness = gradient?.softness ?? 0.5;
+  const grainIntensity = gradient?.intensity ?? 0.5;
+  const grainNoise = gradient?.noise ?? 0.25;
+  const meshNoiseIntensity = gradientType === "mesh" ? gradient?.noise : undefined;
+
   const levelEffect = LEVEL_EFFECTS[level];
   const gradientColors = getLevelGradientColors(brandColors, level);
   const levelOverlayStyle = getLevelOverlayStyle(level);
@@ -149,7 +160,7 @@ export function CreditCard({
           {!gradientDisabled && (
             <AnimatePresence mode="sync">
               <motion.div
-                key={brand}
+                key={`${brand}-${gradientType}`}
                 className="absolute inset-0"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
@@ -157,11 +168,23 @@ export function CreditCard({
                 transition={gradientTransition}
               >
                 <Suspense fallback={null}>
-                  <MeshGradient
-                    className="absolute! inset-0! w-full! h-full!"
-                    colors={gradientColors}
-                    speed={gradientSpeed}
-                  />
+                  {gradientType === "grain" ? (
+                    <GrainGradient
+                      className="absolute! inset-0! w-full! h-full!"
+                      colors={gradientColors}
+                      colorBack={grainColorBack}
+                      softness={grainSoftness}
+                      intensity={grainIntensity}
+                      noise={grainNoise}
+                      speed={gradientSpeed}
+                    />
+                  ) : (
+                    <MeshGradient
+                      className="absolute! inset-0! w-full! h-full!"
+                      colors={gradientColors}
+                      speed={gradientSpeed}
+                    />
+                  )}
                 </Suspense>
               </motion.div>
             </AnimatePresence>
@@ -169,7 +192,10 @@ export function CreditCard({
 
           <div className="absolute inset-0 bg-linear-to-br from-white/10 to-transparent" />
 
-          {/* Level-based overlay effect (gold shimmer, platinum, black, etc.) */}
+          {meshNoiseIntensity !== undefined && meshNoiseIntensity > 0 && (
+            <NoiseOverlay intensity={meshNoiseIntensity} />
+          )}
+
           {hasLevelEffect && (
             <div
               className={cn("absolute inset-0", levelEffect.overlayClass)}
@@ -210,7 +236,7 @@ export function CreditCard({
           {!gradientDisabled && (
             <AnimatePresence mode="sync">
               <motion.div
-                key={brand}
+                key={`${brand}-${gradientType}-back`}
                 className="absolute inset-0"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
@@ -218,11 +244,23 @@ export function CreditCard({
                 transition={gradientTransition}
               >
                 <Suspense fallback={null}>
-                  <MeshGradient
-                    className="absolute! inset-0! w-full! h-full!"
-                    colors={gradientColors}
-                    speed={gradientSpeed}
-                  />
+                  {gradientType === "grain" ? (
+                    <GrainGradient
+                      className="absolute! inset-0! w-full! h-full!"
+                      colors={gradientColors}
+                      colorBack={grainColorBack}
+                      softness={grainSoftness}
+                      intensity={grainIntensity}
+                      noise={grainNoise}
+                      speed={gradientSpeed}
+                    />
+                  ) : (
+                    <MeshGradient
+                      className="absolute! inset-0! w-full! h-full!"
+                      colors={gradientColors}
+                      speed={gradientSpeed}
+                    />
+                  )}
                 </Suspense>
               </motion.div>
             </AnimatePresence>
@@ -230,7 +268,10 @@ export function CreditCard({
 
           <div className="absolute inset-0 bg-linear-to-br from-white/5 to-transparent" />
 
-          {/* Level-based overlay effect for back */}
+          {meshNoiseIntensity !== undefined && meshNoiseIntensity > 0 && (
+            <NoiseOverlay intensity={meshNoiseIntensity} />
+          )}
+
           {hasLevelEffect && (
             <div
               className={cn("absolute inset-0", levelEffect.overlayClass)}

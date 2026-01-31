@@ -1,4 +1,3 @@
-// Core API (Headless)
 export {
   detectCard,
   detectBrand,
@@ -23,7 +22,6 @@ export {
   getValidationErrors,
 } from "./core/validate";
 
-// Test Cards (for development/testing)
 export {
   TEST_CARDS,
   getTestCardsByBrand,
@@ -34,12 +32,12 @@ export {
 } from "./core/testCards";
 export type { TestCard } from "./core/testCards";
 
-// Components
 export {
   CreditCard,
   CreditCardFront,
   CreditCardBack,
   CardBrandLogo,
+  NoiseOverlay,
   BRAND_GRADIENTS,
   CSS_FALLBACKS,
   LEVEL_EFFECTS,
@@ -52,10 +50,8 @@ export { CreditCardWithForm, useCreditCardForm } from "./components/CreditCardFo
 
 export { CheckIcon } from "./components/icons";
 
-// Hooks
 export { useCreditCard } from "./hooks/useCreditCard";
 
-// Utils
 export { cn } from "./utils/cn";
 export {
   formatCardNumber,
@@ -64,16 +60,13 @@ export {
   getLastFourDigits,
 } from "./utils/formatCardNumber";
 
-// Constants
 export {
   CARD_PLACEHOLDERS,
   CARD_LIMITS,
   ANIMATION_CONFIG,
 } from "./constants/creditCard.constants";
 
-// All types (re-exported from creditCard.types which includes core types)
 export type {
-  // Core types
   CardBrand,
   CardType,
   CardLevel,
@@ -89,9 +82,9 @@ export type {
   FullCardValidation,
   DetectOptions,
   ValidateOptions,
-  // UI types
   CardField,
   CardSize,
+  GradientType,
   GradientColors,
   CardAnimationConfig,
   CardGradientConfig,
@@ -103,6 +96,8 @@ export type {
   FormLayout,
   FormClassNames,
   FormStyleProps,
+  FormInputLabels,
+  FormInputPlaceholders,
   CustomField,
   AddressData,
   FormSubmitData,
@@ -119,7 +114,6 @@ export type {
   DetailedValidation,
 } from "./types/creditCard.types";
 
-// Constants from core
 export {
   BRAND_NAMES,
   LATAM_BRANDS,

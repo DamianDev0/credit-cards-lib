@@ -1,4 +1,3 @@
-// Re-export core types
 export type {
   CardBrand,
   CardType,
@@ -39,9 +38,16 @@ export interface CardAnimationConfig {
   disableAnimations?: boolean;
 }
 
+export type GradientType = "mesh" | "grain";
+
 export interface CardGradientConfig {
+  type?: GradientType;
   colors?: GradientColors;
+  colorBack?: string;
   speed?: number;
+  softness?: number;
+  intensity?: number;
+  noise?: number;
   disabled?: boolean;
 }
 
@@ -119,7 +125,6 @@ export interface CreditCardState extends CreditCardData {
   focusedField: CardField | null;
 }
 
-// Component Props
 export interface CreditCardProps {
   cardNumber: string;
   cardholderName: string;
@@ -229,6 +234,34 @@ export interface FormSubmitData {
   metadata?: CardMetadata;
 }
 
+export interface FormInputLabels {
+  cardNumber?: string;
+  cardholderName?: string;
+  expiryDate?: string;
+  cvv?: string;
+  bankName?: string;
+  address?: string;
+  address2?: string;
+  city?: string;
+  state?: string;
+  zip?: string;
+  country?: string;
+}
+
+export interface FormInputPlaceholders {
+  cardNumber?: string;
+  cardholderName?: string;
+  expiryDate?: string;
+  cvv?: string;
+  bankName?: string;
+  address?: string;
+  address2?: string;
+  city?: string;
+  state?: string;
+  zip?: string;
+  country?: string;
+}
+
 export interface CreditCardWithFormProps {
   layout?: FormLayout;
   gap?: number | string;
@@ -238,6 +271,7 @@ export interface CreditCardWithFormProps {
   submitLabel?: string;
   showBankName?: boolean;
   showAddress?: boolean;
+  showSubmitButton?: boolean;
   customFields?: CustomField[];
   customFieldsPosition?: "before" | "after";
   initialValues?: Partial<FormSubmitData>;
@@ -245,6 +279,16 @@ export interface CreditCardWithFormProps {
   cardClassName?: string;
   formClassName?: string;
   cardSize?: CardSize;
+  cardWidth?: number | string;
+  cardAnimation?: CardAnimationConfig;
+  cardGradient?: CardGradientConfig;
+  cardVisibility?: CardVisibilityConfig;
+  cardPlaceholders?: CardPlaceholders;
+  cardLabels?: CardLabels;
+  cardStyle?: CardStyleConfig;
+  cardClassNames?: CardClassNames;
+  formInputLabels?: FormInputLabels;
+  formInputPlaceholders?: FormInputPlaceholders;
   cardProps?: Partial<CreditCardProps>;
   formProps?: FormStyleProps;
   children?: React.ReactNode;
