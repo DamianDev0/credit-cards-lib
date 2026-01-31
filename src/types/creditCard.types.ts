@@ -59,6 +59,8 @@ export interface CardVisibilityConfig {
   magneticStripe?: boolean;
   signatureStrip?: boolean;
   legalText?: boolean;
+  hologram?: boolean;
+  barcode?: boolean;
 }
 
 export interface CardPlaceholders {
@@ -72,6 +74,8 @@ export interface CardLabels {
   bankDisclaimer?: string;
   customerService?: string;
   termsAndConditions?: string;
+  authorizedSignature?: string;
+  securityNotice?: string;
 }
 
 export interface CardStyleConfig {
@@ -94,6 +98,8 @@ export interface CardClassNames {
   bankName?: string;
   magneticStripe?: string;
   signatureStrip?: string;
+  hologram?: string;
+  barcode?: string;
 }
 
 export interface CreditCardData {
