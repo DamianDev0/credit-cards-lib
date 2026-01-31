@@ -150,15 +150,20 @@ export function ContactlessIcon(props: IconProps) {
 }
 
 export function AmexIcon(props: IconProps) {
-  // American Express blue box logo
+  // American Express simple logo - blue box with white text
   return (
-    <svg viewBox="0 0 750 471" {...props}>
-      <rect fill="#006FCF" width="750" height="471" rx="40" />
-      <path
-        fill="#FFFFFF"
-        d="M0,221.73l36.31-85.15H84l41.26,95.26V136.58h54.92l31.02,65.84,28.39-65.84h54.92v134.32H261.6V188.28l-33.65,82.62H194.07l-33.65-83.11v83.11H99.69L90.2,247.69H41.15l-9.49,23.21H0V221.73z M65.67,161.8l-17.02,40.64H82.69L65.67,161.8z M675.46,270.9H740l-32.1-75.15l-32.44,75.15z M483.27,136.58l-48.82,112.61l-51.45-112.61H336.05V188.9l-37.29-52.32h-48.82l-36.31,85.15v49.17H256.35l9.49-23.21h49.05l9.49,23.21h100.83v-82.62l46.19,82.62h32.1l46.19-83.11v83.11h32.93v-33.65l10.96-11.94l41.26,45.59h43.89l-60.28-65.34l56.31-68.97h-42.41l-38.27,44.62v-44.62H483.27z M310.51,161.8l-17.02,40.64h34.03L310.51,161.8z"
-        transform="translate(75 105)"
-      />
+    <svg viewBox="0 0 120 80" {...props}>
+      <rect fill="#006FCF" width="120" height="80" rx="8" />
+      <g fill="#FFFFFF">
+        {/* A */}
+        <path d="M12 55L18 30h6l6 25h-5l-1-5h-6l-1 5h-5zm7-9h4l-2-10-2 10z" />
+        {/* M */}
+        <path d="M34 55V30h6l4 15 4-15h6v25h-4V38l-4 17h-4l-4-17v17h-4z" />
+        {/* E */}
+        <path d="M58 55V30h12v4H62v6h7v4h-7v7h8v4H58z" />
+        {/* X */}
+        <path d="M74 55l6-13-6-12h5l4 8 4-8h5l-6 12 6 13h-5l-4-9-4 9h-5z" />
+      </g>
     </svg>
   );
 }
