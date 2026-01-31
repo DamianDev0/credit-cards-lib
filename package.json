@@ -47,7 +47,6 @@
     "react-dom": "^18.0.0 || ^19.0.0"
   },
   "dependencies": {
-    "@fontsource/roboto-mono": "^5.2.8",
     "@paper-design/shaders-react": "^0.0.71",
     "clsx": "^2.1.1",
     "credit-card-type": "^10.1.2",

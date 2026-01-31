@@ -1,8 +1,8 @@
 import { lazy, Suspense, useMemo } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import "@fontsource/roboto-mono/400.css";
-import "@fontsource/roboto-mono/500.css";
-import "@fontsource/roboto-mono/700.css";
+// Font: Roboto Mono - consumers should load this font themselves
+// Option 1: npm install @fontsource/roboto-mono && import "@fontsource/roboto-mono"
+// Option 2: Add to HTML: <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 import type { CreditCardProps, CardSize } from "../../types/creditCard.types";
 import { cn } from "../../utils/cn";
 import { CreditCardFront } from "./CreditCardFront";

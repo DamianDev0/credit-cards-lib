@@ -15,7 +15,7 @@ export default defineConfig(({ mode }) => {
         dts({
           insertTypesEntry: true,
           include: ["src"],
-          exclude: ["src/main.tsx", "src/App.tsx"],
+          exclude: ["src/main.tsx", "src/App.tsx", "src/assets/**/*"],
         }),
     ].filter(Boolean),
     resolve: {
@@ -39,9 +39,17 @@ export default defineConfig(({ mode }) => {
                 "react-dom": "ReactDOM",
                 "react/jsx-runtime": "jsxRuntime",
               },
+              // Don't include asset hashes for cleaner output
+              assetFileNames: "[name][extname]",
             },
           },
           cssCodeSplit: false,
+          // Don't copy public folder to dist
+          copyPublicDir: false,
+          // Minify for smaller bundle
+          minify: "esbuild",
+          // Target modern browsers for smaller output
+          target: "es2020",
         }
       : {},
   };

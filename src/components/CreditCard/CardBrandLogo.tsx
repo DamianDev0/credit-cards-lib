@@ -27,7 +27,7 @@ const BRAND_ICONS: Partial<Record<CardBrand, ComponentType<SVGProps<SVGSVGElemen
 
 const SIZE_CLASSES = {
   sm: "w-12 h-8",
-  md: "w-18 h-12",
+  md: "w-[4.5rem] h-12",
   lg: "w-24 h-16",
 };
 

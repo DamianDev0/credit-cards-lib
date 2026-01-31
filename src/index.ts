@@ -1,3 +1,6 @@
+// Import CSS for Tailwind classes
+import "./index.css";
+
 export {
   detectCard,
   detectBrand,
