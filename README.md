@@ -1,7 +1,7 @@
 # Credit Card UI React
 
 <p align="center">
-  <img src="public/credit.gif" alt="Credit Card UI Demo" width="800" />
+  <img src="https://res.cloudinary.com/dpqbn1gqb/image/upload/v1769927646/credit_tltruh.gif" alt="Credit Card UI Demo" width="800" />
 </p>
 
 <p align="center">
@@ -234,7 +234,7 @@ Smooth, fluid gradient animation with color blending.
 Textured gradient with noise effect for a premium look.
 
 <p align="center">
-  <img src="public/credit-noise.gif" alt="Grain Gradient Effect" width="800" />
+  <img src="https://res.cloudinary.com/dpqbn1gqb/image/upload/v1769927645/credit-noise_qpjhyb.gif" alt="Grain Gradient Effect" width="800" />
 </p>
 
 ```tsx
