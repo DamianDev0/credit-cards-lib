@@ -11,7 +11,7 @@
 <p align="center">
   <a href="https://www.npmjs.com/package/credit-card-ui-react"><img src="https://img.shields.io/npm/v/credit-card-ui-react.svg" alt="npm version" /></a>
   <a href="https://www.npmjs.com/package/credit-card-ui-react"><img src="https://img.shields.io/npm/dm/credit-card-ui-react.svg" alt="npm downloads" /></a>
-  <a href="https://github.com/your-username/credit-card-ui-react/blob/main/LICENSE"><img src="https://img.shields.io/npm/l/credit-card-ui-react.svg" alt="license" /></a>
+  <a href="https://github.com/DamianDev0/credit-cards-lib/blob/main/LICENSE"><img src="https://img.shields.io/npm/l/credit-card-ui-react.svg" alt="license" /></a>
 </p>
 
 ---

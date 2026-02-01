@@ -3,7 +3,7 @@
   "version": "0.1.20",
   "type": "module",
   "description": "A beautiful, animated credit card component for React",
-  "author": "Your Name",
+  "author": "DamianDev0",
   "license": "MIT",
   "keywords": [
     "react",
@@ -15,7 +15,11 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/your-username/credit-card-ui.git"
+    "url": "https://github.com/DamianDev0/credit-cards-lib.git"
+  },
+  "homepage": "https://github.com/DamianDev0/credit-cards-lib#readme",
+  "bugs": {
+    "url": "https://github.com/DamianDev0/credit-cards-lib/issues"
   },
   "main": "./dist/credit-card-ui.umd.cjs",
   "module": "./dist/credit-card-ui.js",
