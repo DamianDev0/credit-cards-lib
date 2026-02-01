@@ -20,9 +20,13 @@ export function getFormStyles(formProps?: FormProps) {
       cn(
         "w-full h-10 sm:h-12 rounded-xl font-medium text-white transition-colors",
         isValid && !isSubmitting
-          ? "bg-blue-500 hover:bg-blue-600 cursor-pointer"
+          ? "bg-zinc-900 hover:bg-zinc-800 cursor-pointer"
           : "bg-gray-300 cursor-not-allowed",
         formProps?.classNames?.submitButton
       ),
+    validIcon: cn(
+      "w-5 h-5 rounded-full bg-emerald-600 flex items-center justify-center shrink-0",
+      formProps?.classNames?.validIcon
+    ),
   };
 }

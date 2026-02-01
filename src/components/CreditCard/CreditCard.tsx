@@ -124,28 +124,32 @@ export function CreditCard({
   const sizeClass = width ? "" : SIZE_PRESETS[size];
   const widthStyle = width ? { width: typeof width === "number" ? `${width}px` : width } : {};
 
+  const borderRadiusValue = mergedStyle.borderRadius;
   const cardStyle = {
-    borderRadius: mergedStyle.borderRadius,
+    borderRadius: borderRadiusValue,
     boxShadow: mergedStyle.shadow,
+    clipPath: `inset(0 round ${borderRadiusValue})`,
+    WebkitClipPath: `inset(0 round ${borderRadiusValue})`,
   };
 
   return (
     <div
       className={cn("w-full mx-auto", sizeClass, className, classNames?.root)}
-      style={{ perspective: "1000px", ...widthStyle }}
+      style={{ perspective: "1000px", WebkitPerspective: "1000px", ...widthStyle }}
     >
       <motion.div
         className="relative w-full cursor-pointer"
         style={{
           transformStyle: "preserve-3d",
+          WebkitTransformStyle: "preserve-3d",
           aspectRatio: mergedStyle.aspectRatio,
         }}
         animate={{ rotateY: isFlipped ? 180 : 0 }}
         transition={flipTransition}
       >
         <div
-          className={cn("absolute inset-0 w-full h-full overflow-hidden", classNames?.front)}
-          style={{ backfaceVisibility: "hidden", ...cardStyle }}
+          className={cn("absolute inset-0 w-full h-full overflow-hidden isolate", classNames?.front)}
+          style={{ backfaceVisibility: "hidden", WebkitBackfaceVisibility: "hidden", ...cardStyle }}
         >
           <AnimatePresence mode="sync">
             <motion.div
@@ -191,7 +195,7 @@ export function CreditCard({
             </AnimatePresence>
           )}
 
-          <div className="absolute inset-0 bg-linear-to-br from-white/10 to-transparent" />
+          <div className="absolute inset-0 bg-linear-to-br from-white/10 to-transparent" style={{ backfaceVisibility: "hidden" }} />
 
           {meshNoiseIntensity !== undefined && meshNoiseIntensity > 0 && (
             <NoiseOverlay intensity={meshNoiseIntensity} />
@@ -200,7 +204,7 @@ export function CreditCard({
           {hasLevelEffect && (
             <div
               className={cn("absolute inset-0", levelEffect.overlayClass)}
-              style={levelOverlayStyle}
+              style={{ ...levelOverlayStyle, backfaceVisibility: "hidden", WebkitBackfaceVisibility: "hidden" }}
             />
           )}
 
@@ -220,8 +224,8 @@ export function CreditCard({
         </div>
 
         <div
-          className={cn("absolute inset-0 w-full h-full overflow-hidden", classNames?.back)}
-          style={{ backfaceVisibility: "hidden", transform: "rotateY(180deg)", ...cardStyle }}
+          className={cn("absolute inset-0 w-full h-full overflow-hidden isolate", classNames?.back)}
+          style={{ backfaceVisibility: "hidden", WebkitBackfaceVisibility: "hidden", transform: "rotateY(180deg)", WebkitTransform: "rotateY(180deg)", ...cardStyle }}
         >
           <AnimatePresence mode="sync">
             <motion.div
@@ -267,7 +271,7 @@ export function CreditCard({
             </AnimatePresence>
           )}
 
-          <div className="absolute inset-0 bg-linear-to-br from-white/5 to-transparent" />
+          <div className="absolute inset-0 bg-linear-to-br from-white/5 to-transparent" style={{ backfaceVisibility: "hidden" }} />
 
           {meshNoiseIntensity !== undefined && meshNoiseIntensity > 0 && (
             <NoiseOverlay intensity={meshNoiseIntensity} />
@@ -276,7 +280,7 @@ export function CreditCard({
           {hasLevelEffect && (
             <div
               className={cn("absolute inset-0", levelEffect.overlayClass)}
-              style={levelOverlayStyle}
+              style={{ ...levelOverlayStyle, backfaceVisibility: "hidden", WebkitBackfaceVisibility: "hidden" }}
             />
           )}
 
