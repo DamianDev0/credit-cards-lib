@@ -35,6 +35,14 @@
 npm install credit-card-ui-react
 ```
 
+### Import Styles
+
+```tsx
+import "credit-card-ui-react/styles.css";
+```
+
+> No Tailwind CSS required — all styles are pre-compiled and included.
+
 ---
 
 ## Usage
@@ -148,9 +156,11 @@ function CustomForm() {
 |------|------|---------|-------------|
 | `layout` | `FormLayout` | `"vertical"` | Layout (`vertical`, `horizontal-left`, `horizontal-right`) |
 | `gap` | `number \| string` | `"2rem"` | Gap between card and form |
-| `onSubmit` | `function` | - | Submit handler `(data: FormSubmitData) => void` |
+| `onSubmit` | `function` | - | Submit handler `(data: FormSubmitData) => void \| Promise<void>` |
 | `onCardChange` | `function` | - | Change handler |
-| `isSubmitting` | `boolean` | `false` | Loading state |
+| `onValidationError` | `function` | - | Called on invalid submit `(errors, data) => void` |
+| `isSubmitting` | `boolean` | - | Loading state (auto-detected from async `onSubmit` if omitted) |
+| `disabled` | `boolean` | `false` | Disable all form inputs and submit button |
 | `submitLabel` | `string` | `"Submit"` | Button text |
 | `showBankName` | `boolean` | `false` | Show bank name field |
 | `showAddress` | `boolean` | `false` | Show address fields |

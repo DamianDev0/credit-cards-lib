@@ -23,7 +23,7 @@ export {
   INSTALLMENT_SUPPORT,
 } from "../core/types";
 
-import type { CardBrand, CardLevel, CardMetadata } from "../core/types";
+import type { CardBrand, CardLevel, CardMetadata, ValidationError as CoreValidationError } from "../core/types";
 
 export type CardField = "cardNumber" | "cardholderName" | "expiryDate" | "cvv";
 
@@ -162,6 +162,7 @@ export interface CreditCardFrontProps {
   level?: CardLevel;
   focusedField?: CardField | null;
   bankName?: string;
+  size?: CardSize;
   visibility?: CardVisibilityConfig;
   placeholders?: CardPlaceholders;
   classNames?: CardClassNames;
@@ -273,7 +274,9 @@ export interface CreditCardWithFormProps {
   gap?: number | string;
   onSubmit?: (data: FormSubmitData) => void | Promise<void>;
   onCardChange?: (data: FormSubmitData) => void;
+  onValidationError?: (errors: CoreValidationError[], data: FormSubmitData) => void;
   isSubmitting?: boolean;
+  disabled?: boolean;
   submitLabel?: string;
   showBankName?: boolean;
   showAddress?: boolean;

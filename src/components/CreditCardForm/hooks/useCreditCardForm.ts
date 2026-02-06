@@ -1,6 +1,7 @@
 import { useState, useCallback, useMemo, useEffect, type ChangeEvent } from "react";
 import type { AddressData, CardField, CreditCardWithFormProps } from "../../../types/creditCard.types";
 import { useCreditCard } from "../../../hooks/useCreditCard";
+import { getValidationErrors } from "../../../core/validate";
 import { CARD_LIMITS } from "../../../constants/creditCard.constants";
 import { EMPTY_ADDRESS } from "../constants";
 
@@ -11,6 +12,7 @@ interface UseCreditCardFormOptions {
   customFields?: CreditCardWithFormProps["customFields"];
   onCardChange?: CreditCardWithFormProps["onCardChange"];
   onSubmit?: CreditCardWithFormProps["onSubmit"];
+  onValidationError?: CreditCardWithFormProps["onValidationError"];
 }
 
 export function useCreditCardForm({
@@ -20,9 +22,11 @@ export function useCreditCardForm({
   customFields = [],
   onCardChange,
   onSubmit,
+  onValidationError,
 }: UseCreditCardFormOptions) {
   const creditCard = useCreditCard();
   const { state, validation, detailedValidation, metadata, handlers } = creditCard;
+  const [autoSubmitting, setAutoSubmitting] = useState(false);
 
   const [bankName, setBankName] = useState(initialValues?.bankName ?? "");
   const [address, setAddress] = useState<AddressData>({
@@ -124,11 +128,31 @@ export function useCreditCardForm({
   const handleSubmit = useCallback(
     async (e: React.FormEvent) => {
       e.preventDefault();
-      if (validation.isValid && onSubmit) {
-        await onSubmit(formData);
+      if (!validation.isValid) {
+        if (onValidationError) {
+          const errors = getValidationErrors(
+            state.cardNumber,
+            state.expiryDate,
+            state.cvv,
+            state.cardholderName
+          );
+          onValidationError(errors, formData);
+        }
+        return;
+      }
+      if (onSubmit) {
+        const result = onSubmit(formData);
+        if (result instanceof Promise) {
+          setAutoSubmitting(true);
+          try {
+            await result;
+          } finally {
+            setAutoSubmitting(false);
+          }
+        }
       }
     },
-    [validation.isValid, onSubmit, formData]
+    [validation.isValid, onSubmit, onValidationError, formData, state]
   );
 
   return {
@@ -144,6 +168,7 @@ export function useCreditCardForm({
     address,
     customValues,
     formData,
+    autoSubmitting,
 
     // Utilities
     getFirstError,

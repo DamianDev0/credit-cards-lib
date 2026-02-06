@@ -86,8 +86,11 @@ export function CreditCard({
     [style]
   );
 
+  const hasCustomGradient = !!gradient?.colors;
   const brandColors = gradient?.colors ?? BRAND_GRADIENTS[brand];
-  const cssFallback = CSS_FALLBACKS[brand];
+  const cssFallback = hasCustomGradient
+    ? `from-[${gradient!.colors![0]}] via-[${gradient!.colors![1]}] to-[${gradient!.colors![2]}]`
+    : CSS_FALLBACKS[brand];
   const gradientType = gradient?.type ?? "mesh";
   const gradientSpeed = gradient?.speed ?? (gradientType === "grain" ? 1 : 0.15);
   const gradientDisabled = gradient?.disabled ?? false;
@@ -99,9 +102,11 @@ export function CreditCard({
   const meshNoiseIntensity = gradientType === "mesh" ? gradient?.noise : undefined;
 
   const levelEffect = LEVEL_EFFECTS[level];
-  const gradientColors = getLevelGradientColors(brandColors, level);
+  // When custom colors are provided, skip level color replacement — use custom colors directly
+  const gradientColors = hasCustomGradient ? brandColors : getLevelGradientColors(brandColors, level);
   const levelOverlayStyle = getLevelOverlayStyle(level);
-  const hasLevelEffect = levelEffect && levelEffect.opacity > 0;
+  // When custom gradient is provided, skip level overlay to avoid visual conflict
+  const hasLevelEffect = !hasCustomGradient && levelEffect && levelEffect.opacity > 0;
 
   const gradientTransition = useMemo(
     () => ({
@@ -153,8 +158,11 @@ export function CreditCard({
         >
           <AnimatePresence mode="sync">
             <motion.div
-              key={`fallback-front-${brand}`}
-              className={cn("absolute inset-0 bg-linear-to-br", cssFallback)}
+              key={`fallback-front-${brand}-${hasCustomGradient}`}
+              className={cn("absolute inset-0 bg-linear-to-br", !hasCustomGradient && cssFallback)}
+              style={hasCustomGradient ? {
+                background: `linear-gradient(to bottom right, ${gradient!.colors![0]}, ${gradient!.colors![1]}, ${gradient!.colors![2]})`
+              } : undefined}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -216,6 +224,7 @@ export function CreditCard({
             level={level}
             focusedField={focusedField}
             bankName={mergedVisibility.bankName ? bankName : undefined}
+            size={size}
             visibility={mergedVisibility}
             placeholders={placeholders}
             classNames={classNames}
@@ -229,8 +238,11 @@ export function CreditCard({
         >
           <AnimatePresence mode="sync">
             <motion.div
-              key={`fallback-back-${brand}`}
-              className={cn("absolute inset-0 bg-linear-to-br", cssFallback)}
+              key={`fallback-back-${brand}-${hasCustomGradient}`}
+              className={cn("absolute inset-0 bg-linear-to-br", !hasCustomGradient && cssFallback)}
+              style={hasCustomGradient ? {
+                background: `linear-gradient(to bottom right, ${gradient!.colors![0]}, ${gradient!.colors![1]}, ${gradient!.colors![2]})`
+              } : undefined}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}

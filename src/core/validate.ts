@@ -270,9 +270,9 @@ export function validateCardholderName(name: string): { isValid: boolean; errors
 
 export function validateCard(
   cardNumber: string,
-  expiryDate: string,
-  cvv: string,
-  cardholderName: string,
+  expiryDate: string = "",
+  cvv: string = "",
+  cardholderName: string = "",
   options: ValidateOptions = {}
 ): FullCardValidation {
   const cardValidation = validateCardNumber(cardNumber, options);
@@ -310,9 +310,9 @@ export function isValidCvv(cvv: string, brand?: CardBrand): boolean {
 
 export function getValidationErrors(
   cardNumber: string,
-  expiryDate: string,
-  cvv: string,
-  cardholderName: string
+  expiryDate: string = "",
+  cvv: string = "",
+  cardholderName: string = ""
 ): ValidationError[] {
   const validation = validateCard(cardNumber, expiryDate, cvv, cardholderName);
   return [

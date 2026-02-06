@@ -42,7 +42,9 @@ export function CreditCardWithForm({
   gap = "2rem",
   onSubmit,
   onCardChange,
-  isSubmitting = false,
+  onValidationError,
+  isSubmitting: isSubmittingProp,
+  disabled = false,
   submitLabel = "Submit",
   showBankName = false,
   showAddress = false,
@@ -79,6 +81,7 @@ export function CreditCardWithForm({
     bankName,
     address,
     customValues,
+    autoSubmitting,
     getFirstError,
     handlers,
   } = useCreditCardForm({
@@ -88,7 +91,11 @@ export function CreditCardWithForm({
     customFields,
     onCardChange,
     onSubmit,
+    onValidationError,
   });
+
+  // Auto-manage isSubmitting: prop takes precedence, then auto-detect from Promise
+  const isSubmitting = isSubmittingProp ?? autoSubmitting;
 
   const labels = { ...DEFAULT_INPUT_LABELS, ...formInputLabels };
   const placeholders = { ...DEFAULT_INPUT_PLACEHOLDERS, ...formInputPlaceholders };
@@ -121,6 +128,7 @@ export function CreditCardWithForm({
               placeholder={field.placeholder}
               maxLength={field.maxLength}
               required={field.required}
+              disabled={disabled}
               className={styles.input}
             />
           </div>
@@ -175,6 +183,7 @@ export function CreditCardWithForm({
                   onChange={handlers.handleBankNameChange}
                   placeholder={placeholders.bankName}
                   maxLength={20}
+                  disabled={disabled}
                   className={cn(styles.input, "uppercase")}
                 />
               </div>
@@ -203,6 +212,7 @@ export function CreditCardWithForm({
                 placeholder={placeholders.cardNumber}
                 inputMode="numeric"
                 autoComplete="cc-number"
+                disabled={disabled}
                 className={cn(styles.input, "font-mono tracking-wider")}
               />
               {validation.cardNumber && state.cardNumber.length > 0 && (
@@ -242,6 +252,7 @@ export function CreditCardWithForm({
                 placeholder={placeholders.cardholderName}
                 maxLength={22}
                 autoComplete="cc-name"
+                disabled={disabled}
                 className={cn(styles.input, "uppercase")}
               />
             </div>
@@ -264,6 +275,7 @@ export function CreditCardWithForm({
                   maxLength={CARD_LIMITS.maxExpiryLength}
                   inputMode="numeric"
                   autoComplete="cc-exp"
+                  disabled={disabled}
                   className={cn(styles.input, "text-center font-mono")}
                 />
               </div>
@@ -294,6 +306,7 @@ export function CreditCardWithForm({
                   maxLength={CARD_LIMITS.maxCvvLength}
                   inputMode="numeric"
                   autoComplete="cc-csc"
+                  disabled={disabled}
                   className={cn(styles.input, "text-center font-mono")}
                 />
               </div>
@@ -318,6 +331,7 @@ export function CreditCardWithForm({
                     value={address.address1}
                     onChange={handlers.handleAddressChange("address1")}
                     placeholder={placeholders.address}
+                    disabled={disabled}
                     className={styles.input}
                   />
                 </div>
@@ -331,6 +345,7 @@ export function CreditCardWithForm({
                     value={address.address2}
                     onChange={handlers.handleAddressChange("address2")}
                     placeholder={placeholders.address2}
+                    disabled={disabled}
                     className={styles.input}
                   />
                 </div>
@@ -345,6 +360,7 @@ export function CreditCardWithForm({
                       value={address.city}
                       onChange={handlers.handleAddressChange("city")}
                       placeholder={placeholders.city}
+                      disabled={disabled}
                       className={styles.input}
                     />
                   </div>
@@ -358,6 +374,7 @@ export function CreditCardWithForm({
                       value={address.state}
                       onChange={handlers.handleAddressChange("state")}
                       placeholder={placeholders.state}
+                      disabled={disabled}
                       className={styles.input}
                     />
                   </div>
@@ -374,6 +391,7 @@ export function CreditCardWithForm({
                       onChange={handlers.handleAddressChange("zip")}
                       placeholder={placeholders.zip}
                       inputMode="numeric"
+                      disabled={disabled}
                       className={styles.input}
                     />
                   </div>
@@ -387,6 +405,7 @@ export function CreditCardWithForm({
                       value={address.country}
                       onChange={handlers.handleAddressChange("country")}
                       placeholder={placeholders.country}
+                      disabled={disabled}
                       className={styles.input}
                     />
                   </div>
@@ -402,8 +421,8 @@ export function CreditCardWithForm({
           {showSubmitButton && (
             <button
               type="submit"
-              disabled={!validation.isValid || isSubmitting}
-              className={styles.submitButton(validation.isValid, isSubmitting)}
+              disabled={!validation.isValid || isSubmitting || disabled}
+              className={styles.submitButton(validation.isValid && !disabled, isSubmitting || disabled)}
             >
               {isSubmitting ? "Processing..." : submitLabel}
             </button>
