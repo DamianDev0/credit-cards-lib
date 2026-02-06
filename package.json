@@ -1,6 +1,6 @@
 {
   "name": "credit-card-ui-react",
-  "version": "0.1.21",
+  "version": "0.2.0",
   "type": "module",
   "description": "A beautiful, animated credit card component for React",
   "author": "DamianDev0",
